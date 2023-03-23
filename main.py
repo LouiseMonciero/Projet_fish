@@ -20,3 +20,4 @@ menu.add.button('Quitter', pygame_menu.events.EXIT)
 
 # alternative way to manage the main loop explained here : https://pygame-menu.readthedocs.io/en/4.3.9/_source/create_menu.html#display-a-menu
 menu.mainloop(screen)
+print('Coucouc alex')

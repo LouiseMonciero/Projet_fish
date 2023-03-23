@@ -1,0 +1,19 @@
+29 fevrier : 
+    On a les variables projectiles et munition tjrs. Tant que le poisson est en l'air, aucune possibilités pour l'utilisateur de selectioner un autre poisson.
+5 mars :
+    Il n'y a plus de bouton lancer.
+    Le bouton lancer étant maintenant le poisson,
+    Création de la fonction draw_maintain, pour lancer le poisson en le maintenant
+    Variabilité de la puissance, de l'angle de lancer
+12 mars :
+    Proposition de changer le design, mettre tout sous un format "Mario"
+    Fonction générant aléatoirement la position de pièces placé sur l'écran.
+    Variables d'un score avec +1 à chaque pièce récuperées.
+    Erreur, impossible de tester si les rectangles se touchent.
+17 mars : 
+    Essaie de débugage de collide.rect - > pas réussi.
+    Création d'un bandeau du lance pierre -> en cours.
+20 mars :
+    Harmonisation du code avec un menu
+    PBM : les coordonées du poisson, self.top_left sont calculer à partir du départ.
+    

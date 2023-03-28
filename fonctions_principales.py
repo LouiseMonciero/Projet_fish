@@ -18,6 +18,8 @@ def start_the_game():
   rouge_img = pygame.image.load("poisson_rouge.png").convert_alpha()
   #button_img = pygame.image.load("bouton.png").convert_alpha()
   piece_img_gr = pygame.image.load("piece.png").convert_alpha()
+  brique_img = pygame.image.load("brique.png").convert_alpha()
+  bloc_or_img = pygame.image.load("bloc_or.png").convert_alpha()
   
   
   mer = pygame.transform.scale(mer_img, (1000,700))
@@ -66,6 +68,7 @@ def start_the_game():
   tab_pieces = generate_piece (5 , (100,1000,0,500), piece_img)
   
   while game_on:
+      print(onchange)
       screen.blit(mer , (0,0))
       screen.blit (image_score, (40,20))
       screen.blit (police.render( str(n_score) , 1, (0,0,0) ), (100 , 20))
@@ -150,7 +153,7 @@ def start_the_game():
 def regle_jeu():  #fct pour la partie regle dans le menu
     screen = pygame.display.set_mode((1000, 700))
 
-    fond_regle = pygame.image.load("fond regle temporaire.jpg").convert_alpha()
+    fond_regle = pygame.image.load("fond_regle_temporaire.jpg").convert_alpha()
     bombe = pygame.image.load("bombe.png").convert_alpha()
     piece = pygame.image.load("piece.png").convert_alpha()
     retour = pygame.image.load("retour.png").convert_alpha()

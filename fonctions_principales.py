@@ -16,12 +16,12 @@ def start_the_game():
   sardine_img = pygame.image.load("saumon.png").convert_alpha()
   globe_img = pygame.image.load("globe.png").convert_alpha()
   rouge_img = pygame.image.load("poisson_rouge.png").convert_alpha()
-  button_img = pygame.image.load("bouton.png").convert_alpha()
+  #button_img = pygame.image.load("bouton.png").convert_alpha()
   piece_img_gr = pygame.image.load("piece.png").convert_alpha()
   
   
   mer = pygame.transform.scale(mer_img, (1000,700))
-  piece_img = pygame.transform.scale(piece_img_gr, ( piece_img_gr.get_width() * 0.4 , piece_img_gr.get_height()* 0.4 ))
+  piece_img = pygame.transform.scale(piece_img_gr, ( piece_img_gr.get_width() * 0.1 , piece_img_gr.get_height()* 0.1 ))
   
   # MES SURFACES
   screen.blit(mer , (0,0))
@@ -42,8 +42,7 @@ def start_the_game():
   # VARIABLES
   projectile = None  # quand le poisson est en l'air
   munition = None     # quand le poisson est sur la zone de départ
-  munition_charge = 0  # quand la trajectoire de tir est faite.
-  para_lancer = None
+  para_lancer = None    # (vitesse , angle )
   
   score = 0
   
@@ -64,28 +63,27 @@ def start_the_game():
   image_score = police.render("SCORE:", 1, (0,0,0))  #(0,0,0) est le code RGB.
   image_n_score = police.render( str(n_score) , 1, (0,0,0) )
   
-  tab_pieces = generate_piece (1 , (100,1000,0,500), piece_img)
+  tab_pieces = generate_piece (5 , (100,1000,0,500), piece_img)
   
   while game_on:
       screen.blit(mer , (0,0))
       screen.blit (image_score, (40,20))
       screen.blit (police.render( str(n_score) , 1, (0,0,0) ), (100 , 20))
-      #n_score += 1
   #------------quitter le jeu
       for event in pygame.event.get():
           if event.type == pygame.QUIT:
               pygame.quit()
               exit()
-          # elif event.type == pygame.K_RIGHT:
-              #
   
   #-------------place les surfaces
-  
-      #place le ciel et le sol
       screen.blit(sable, (0, 600))          # coin supp gauche
-      #screen.blit(surface_cassable, (700, 100))
       screen.blit(depart, (100, 525))
       screen.blit(quille, (750, 300))
+
+  #------------place les pièces
+  
+      tab_pieces , n_score = draw_pieces(screen , tab_pieces, projectile, n_score)
+
   #------------place les boutons
   
       if sardine.draw(screen) and projectile == None:
@@ -93,12 +91,7 @@ def start_the_game():
           y = 500
           print('sardine clicked')
           munition = bouton( 100, 500, sardine_img, 0.3, 'sardine' )
-          #munition = fish("sardine", sardine_img, 100, 500, 0.3)
-  #------------place les pièces
-  
-      tab_pieces , n_score = draw_pieces(screen , tab_pieces, projectile, n_score)
-  
-  #------------.
+
       if globe.draw(screen) and projectile == None:
           x = 100
           y = 500
@@ -113,16 +106,9 @@ def start_the_game():
           munition = bouton(100, 500, rouge_img, 0.15, 'rouge')
           #munition = fish("rouge", rouge_img, 100, 500, 0.15)
   
+  #-------------variables de lancer/tir
       if munition != None:
-          #munition.draw_fish(screen)
           para_lancer = munition.draw_maintain(screen, (0, 250, 375, 700) )
-  
-      '''if button_lancer.draw(screen) and munition != None:
-          print('boutton clicked')
-          temps_ecoule = 0
-          #lancer()
-          projectile = munition
-          munition = None'''
       
       if munition != None and para_lancer != None :    #Est ce que cest les bonnes conditions ?
           temps_ecoule = 0
@@ -148,7 +134,6 @@ def start_the_game():
           projectile.draw_fish(screen)
           if ( (y < 600) or depasse_sol == False) and (y > 0) :
               x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
-              #print(f"x:{x} y:{y}")
               projectile.attribute_pos(x, y)
           else:
               projectile = None

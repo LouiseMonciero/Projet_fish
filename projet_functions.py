@@ -24,10 +24,7 @@ class fish :
         self.top_left = (x, y)
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
-        self.rect[2] = self.rect[2] + self.top_left[0]
-        self.rect[3] = self.rect[3] + self.top_left[1]
         print("Mon poisson a les coordonées (topleft): ", self.top_left )
-        
 
     def draw_fish(self, screen):
         screen.blit(self.image, self.top_left)
@@ -44,11 +41,10 @@ class fish :
 
     def attribute_pos (self,x,y):
         """permet d'attribuer une nouvelle position au poisson"""
+        self.rect = self.image.get_rect()
+        self.top_left = (x, y)
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
-        self.rect[2] = self.rect[2] + self.top_left[0]
-        self.rect[3] = self.rect[3] + self.top_left[1]
-        self.top_left = (x, y)
 
     def get_x(self):
         return self.top_left[0]
@@ -59,10 +55,6 @@ class fish :
     def get_rect(self):
         "utiliser pour colliderect() in functions draw_pieces"
         t = self.rect
-        ''' t[0] = self.rect[0] + self.top_left[0]
-        t[2] = self.rect[1] + self.top_left[0]
-        t[1] = self.rect[2] + self.top_left[1]
-        t[3] = self.rect[3] + self.top_left[1]  '''     # on peut forcmeent optimiser mais apres tqt
         return t
 
 class bouton :
@@ -76,7 +68,6 @@ class bouton :
         self.name = name
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        print("Le x initié : ", x , "print() .rect.topleft[0]", self.rect.topleft[0])
         self.clicked = False
         self.maint = False
         self.center_clicked = (0,0)   # la ou l'utilisateur aura clique sur le bouton
@@ -105,15 +96,16 @@ class bouton :
             if self.clicked == False and pygame.mouse.get_pressed()[0] == 1:
                 self.clicked = True
                 self.maint = True
-                self.center_clicked = (pos[0]-100 , pos[1]-500)
+                self.center_clicked = (pos[0]-100 , pos[1]-500)   #le centre de l'image du poisson !!!
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
         elif self.clicked == True and ((pygame.mouse.get_pos()[0]>= area[0] and pygame.mouse.get_pos()[0]<=area[1]) and (pygame.mouse.get_pos()[1]>=area[2] and pygame.mouse.get_pos()[1]<=area[3])):
             self.rect.topleft = (pos[0] - self.center_clicked[0], pos[1] - self.center_clicked[1])
-        # (0 , 250 , 375 , 625)
+            print(pos[0] - self.center_clicked[0])
         if self.clicked == False and self.maint == True :
             vitesse = ( sqrt((100-pos[0])**2+(500-pos[1])**2) ) /5.5 #distance par rapport à (100, 500)    est ce que je fais par rapport à pos, ou tect.topleft.
             angle =  atan2( -(500-pos[1]) , (100-pos[0]) )
+            #self.rect.topleft = (pos[0] - self.center_clicked[0]+100, pos[1] - self.center_clicked[1]+500)
             return vitesse, angle
         
     def get_x (self):
@@ -146,12 +138,12 @@ def reduction_img(scale,image):
 
 
 def generate_piece (n, area, image):
-        """int -> tab[tuple]
+        """int -> tab[ pieces ]
         nombre de piece à placer sur l'ecran dans une zone delimité (x1, x2, y1, y2) """
         t = []
-        for i in range( n):
+        for i in range(n):
             t.append((randint(area[0],area[1]),randint(area[2],area[3])))
-            t[i] = pieces(image , t[i][0], t[i][1] )
+            t[i] = pieces(image , t[i][0], t[i][1] )   
             #screen.blit(image , (t[i]))
         return t
 
@@ -163,8 +155,6 @@ class pieces :
         self.top_left = (x, y)
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
-        self.rect[2] = self.rect[2] + self.top_left[0]
-        self.rect[3] = self.rect[3] + self.top_left[1]
 
     def get_img(self):
         return self.img
@@ -173,50 +163,30 @@ class pieces :
         return self.top_left
     
     def get_rect(self):
-        "utiliser pour colliderect() in functions draw_pieces"
-        # self.rect renvoi un tableau (x1 , y1, x2 ,y2 ), J'ai codé de sorte qu'on ressorte (x1, x2, y1, y2)
+        "Renvoie le rectangle de la pièce"
+        #utiliser pour colliderect() in functions draw_pieces
+        # self.rect renvoi un tableau (x1 , y1, largeur , hauteur )
         t = self.rect
-        ''' t[0] = self.rect[0] + self.top_left[0]
-        t[2] = self.rect[1] + self.top_left[0]
-        t[1] = self.rect[2] + self.top_left[1]
-        t[3] = self.rect[3] + self.top_left[1]     '''   # on peut forcmeent optimiser mais apres tqt
         return t
     
 
-def my_collide_rect (area1, area2):
-    if ( ((area2[0] >= area1[0] ) and (area2[0] <= area1[1]) ) ) :
-        return 1
-    if  ( ((area2[1] >= area1[0] ) and (area2[1] <= area1[1]) ) ):   
-        return 1
-    if ( ((area2[2] >= area1[2] ) and (area2[2] <= area1[3]) ) ):
-        return 1
-    if ( ((area2[3] >= area1[2] ) and (area2[3] <= area1[3]) ) ):
-        return 1
-    return 0
-
-
 def draw_pieces ( screen , t , projectile, n_score):
     # cette fonction ne peut pas etre integrer dans la classe pices en raison de la boucle 
-    # qui accede au element du tableau qui sont elles memes des pieces
-    """tab[tuples] -> tab[tuples] 
+    """tab[ pieces ] -> tab[ pieces ] 
     blit les pieces sur l'écran, vérifie si le joueur ne ramasse pas une pièce """
-    poubelle = []
+    t_new = []
     for i in range (len(t)):
         screen.blit(t[i].get_img() , t[i].get_topleft())
         if projectile != None :
             print('poisson :' ,projectile.get_rect( ) , 'piece', i+1 ,':', t[i].get_rect() )
-            '''if t[i].get_rect().colliderect( projectile.get_rect() ):    #la ocndition est fausse
-                #Il semble que la fonction colliderect ne fonctionnne pas....'''
-            #if my_collide_rect (t[i].get_rect() , projectile.get_rect() ) == 1:
             if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()) :
-                poubelle.append(i)
                 print("Le poisson doit recuperer la piece n°",i+1 )
                 n_score += 1
-    for i in range( 1, len(poubelle)):
-        print('poubelle:',poubelle)
-        print('t:',t)
-        del( t [ poubelle[i] ] )
-    return t , n_score
+            else : 
+                t_new.append( t[i] )
+        else : 
+            t_new.append(t[i])
+    return t_new , n_score
 
 #pos = pygame.mouse.get_pos()
 #.collidepoint(pos)

@@ -1,3 +1,4 @@
+Louise:
 29 fevrier : 
     On a les variables projectiles et munition tjrs. Tant que le poisson est en l'air, aucune possibilités pour l'utilisateur de selectioner un autre poisson.
 5 mars :
@@ -16,4 +17,8 @@
 20 mars :
     Harmonisation du code avec un menu
     PBM : les coordonées du poisson, self.top_left sont calculer à partir du départ.
-    
+28 mars :
+    Nouveau design
+    Redefinnition des coordonnées pour tous les rectangles (x1, y1, largeur, hauteur) !
+    => La fonction pour récuperer les pièces fonctionne enfin !
+Louise.

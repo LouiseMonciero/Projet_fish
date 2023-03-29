@@ -3,7 +3,9 @@ import sys
 import pygame
 from projet_functions import *
 
-diff = 1    #initialise la difficulté au niveau normal.
+diff = 1
+nb_joueur = 1
+pseudo = "pseudo" # si pas de pseudo saisie
 para_jeu = [(7,float('inf'), 0.25, 10 ),(5, 10, 0.18, 10),(3, 6, 0.10, 10 )]      # (nb_pieces , nombre de tir , rapport brique_or / brique , nb_briques)
 
 def start_the_game():
@@ -227,3 +229,14 @@ def set_difficulty(value, difficulty):
     global diff
     diff = difficulty
     pass
+
+
+def save_pseudo(pseudo_sav): # sauvegarde le pseudo dans la variable pseudo
+    global pseudo
+    pseudo = pseudo_sav
+    print(pseudo)
+
+def set_nb_joueurs(value,joueurs):
+  global nb_joueur
+  nb_joueur = joueurs
+  pass

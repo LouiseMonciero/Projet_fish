@@ -188,5 +188,19 @@ def draw_pieces ( screen , t , projectile, n_score):
             t_new.append(t[i])
     return t_new , n_score
 
+#--------------FONCITONS DE LA MATRICE DE LA ZONE CASSABLE.
+
+def create_mat (nb_bloc , rapport):
+    """Créer la matrice représentant la zone cassable.
+    0: Pas de bloc à cet emplacement
+    1: Un bloc à cet emplacement
+    2: Une brique d'or à cet emplaement"""
+    M= [[0]*6]*8
+    return M
+
+def draw_mat ( M , area):
+    """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
+    return M
+
 #pos = pygame.mouse.get_pos()
 #.collidepoint(pos)

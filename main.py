@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((1000, 700))   # largeur hauteur
 menu = pygame_menu.Menu('AngryFish', 1000, 700, theme=pygame_menu.themes.THEME_BLUE)
 
 menu.add.text_input('Joueur : ', default='pseudo')
-menu.add.selector('Difficulté : ', [('Normal',2),('Difficile', 3), ('Facile', 1)], onchange= set_difficulty)
+menu.add.selector('Difficulté : ', [('Normal',1),('Difficile', 2), ('Facile', 0)], onchange= set_difficulty)
 menu.add.button('Jouer', start_the_game) # l'ancien main a ete mit dans la fonction start_the_game pour que le jeu se lance que quand on clique sur le bouton "Jouer"
 menu.add.button('Règle', regle_jeu) # quand on clique sur le bouton "regle" ca lance la fct regle_jeu qui affiche une page avec le but du jeu, les regle du jeu, les objet speciaux et les capaciter des different poisson 
 menu.add.button('Quitter', pygame_menu.events.EXIT)

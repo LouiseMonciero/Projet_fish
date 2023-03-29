@@ -3,8 +3,11 @@ import sys
 import pygame
 from projet_functions import *
 
+diff = 1    #initialise la difficulté au niveau normal.
+para_jeu = [(7,float('inf'), 0.25, 10 ),(5, 10, 0.18, 10),(3, 6, 0.10, 10 )]      # (nb_pieces , nombre de tir , rapport brique_or / brique , nb_briques)
 
 def start_the_game():
+  global para_jeu
   #MON ECRAN
   screen = pygame.display.set_mode((1000, 700))   # largeur hauteur
   
@@ -20,6 +23,7 @@ def start_the_game():
   piece_img_gr = pygame.image.load("piece.png").convert_alpha()
   brique_img = pygame.image.load("brique.png").convert_alpha()
   bloc_or_img = pygame.image.load("bloc_or.png").convert_alpha()
+  fumee_img = pygame.image.load("fumee.png").convert_alpha()
   
   
   mer = pygame.transform.scale(mer_img, (1000,700))
@@ -65,10 +69,11 @@ def start_the_game():
   image_score = police.render("SCORE:", 1, (0,0,0))  #(0,0,0) est le code RGB.
   image_n_score = police.render( str(n_score) , 1, (0,0,0) )
   
-  tab_pieces = generate_piece (5 , (100,1000,0,500), piece_img)
+  # MES PIECES
+  nb_pieces = para_jeu[diff][0]
+  tab_pieces = generate_piece ( nb_pieces , (100,1000,0,500), piece_img)
   
   while game_on:
-      print(onchange)
       screen.blit(mer , (0,0))
       screen.blit (image_score, (40,20))
       screen.blit (police.render( str(n_score) , 1, (0,0,0) ), (100 , 20))
@@ -213,6 +218,12 @@ def regle_jeu():  #fct pour la partie regle dans le menu
 
 
 
+
 def set_difficulty(value, difficulty):
-    # Do the job here !
+    """la variable diff sauvegarde la difficulté
+    0: Facile
+    1: Normal
+    2: Difficile"""
+    global diff
+    diff = difficulty
     pass

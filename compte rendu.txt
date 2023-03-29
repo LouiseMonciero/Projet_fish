@@ -4,7 +4,7 @@ Louise:
 5 mars :
     Il n'y a plus de bouton lancer.
     Le bouton lancer étant maintenant le poisson,
-    Création de la fonction draw_maintain, pour lancer le poisson en le maintenant
+    Création de la fonction draw_maintain dans la classe bouton, pour lancer le poisson en le maintenant
     Variabilité de la puissance, de l'angle de lancer
 12 mars :
     Proposition de changer le design, mettre tout sous un format "Mario"
@@ -16,9 +16,14 @@ Louise:
     Création d'un bandeau du lance pierre -> en cours.
 20 mars :
     Harmonisation du code avec un menu
-    PBM : les coordonées du poisson, self.top_left sont calculer à partir du départ.
+    Problèmes : les coordonées du poisson, self.top_left sont calculer à partir du point de départ.
 28 mars :
-    Nouveau design
-    Redefinnition des coordonnées pour tous les rectangles (x1, y1, largeur, hauteur) !
+    Redefinnition des coordonnées pour tous les rectangles (x1, y1, largeur, hauteur) qui sont initialisé par .image.get_rect()
     => La fonction pour récuperer les pièces fonctionne enfin !
+29 mars : 
+    Création d'une variables para_jeu (paramètre de jeu) qui est une liste de tuples correspondant au niveau de difficulté choisi par le joueur.
+    para_jeu = ((nb_pieces , nombre de tir , rapport brique_or / brique ),(...), (...)).  Les indices des tuples correspondent au niveau de difficulté.
+    Facile = 0 , Normal = 1, Difficile = 2.
+    Création des fonctions générant la zone cassable -> fonctions vides.
+    Idée de faire  apparaitre un nuage de fumée à la destruction du projectiles.
 Louise.

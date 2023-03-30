@@ -6,7 +6,7 @@ from projet_functions import *
 diff = 1
 nb_joueur = 1
 pseudo = "pseudo" # si pas de pseudo saisie
-para_jeu = [(7,float('inf'), 0.25, 10 ),(5, 10, 0.18, 10),(3, 6, 0.10, 10 )]      # (nb_pieces , nombre de tir , rapport brique_or / brique , nb_briques)
+para_jeu = [(7,float('inf'), 20, 30 ),(5, 10, 15, 35),(3, 6, 10, 50 )]      # (nb_pieces , nombre de tir , chance d'avoir brique_or / brique , nb_briques)
 
 def start_the_game():
   global para_jeu
@@ -16,7 +16,6 @@ def start_the_game():
   #MES IMAGES
   mer_img = pygame.image.load("mer.png").convert_alpha()
   sable_img = pygame.image.load("sable.png").convert_alpha()
-  quille = pygame.image.load("quille.png").convert_alpha()
   depart_gd = pygame.image.load("lance_pierre.png").convert_alpha()
   sardine_img = pygame.image.load("saumon.png").convert_alpha()
   globe_img = pygame.image.load("globe.png").convert_alpha()
@@ -39,7 +38,6 @@ def start_the_game():
   
   sable = pygame.transform.scale(sable_img, (1000, 100))
   depart = pygame.transform.scale(depart_gd, (75, 75))
-  quille = pygame.transform.scale(quille, (300, 300))
   
   # MES BOUTTONS
   sardine = bouton(20, 50, sardine_img, 0.2, '')
@@ -75,6 +73,11 @@ def start_the_game():
   nb_pieces = para_jeu[diff][0]
   tab_pieces = generate_piece ( nb_pieces , (100,1000,0,500), piece_img)
   
+  # MES BLOCS
+  M = create_mat( para_jeu[diff][3] , para_jeu[diff][2])
+  print_mat(M) #test
+  
+
   while game_on:
       screen.blit(mer , (0,0))
       screen.blit (image_score, (40,20))
@@ -88,11 +91,13 @@ def start_the_game():
   #-------------place les surfaces
       screen.blit(sable, (0, 600))          # coin supp gauche
       screen.blit(depart, (100, 525))
-      screen.blit(quille, (750, 300))
 
   #------------place les pièces
   
       tab_pieces , n_score = draw_pieces(screen , tab_pieces, projectile, n_score)
+
+  #------------place les blocs 
+      M = draw_mat( screen , bloc_or_img, brique_img ,M , (600 , 950 , 200 , 750 ))   # (x1 , x2 , y1 , y2 )
 
   #------------place les boutons
   

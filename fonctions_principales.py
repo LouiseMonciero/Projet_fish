@@ -79,6 +79,7 @@ def start_the_game():
   
 
   while game_on:
+      print("test")
       screen.blit(mer , (0,0))
       screen.blit (image_score, (40,20))
       screen.blit (police.render( str(n_score) , 1, (0,0,0) ), (100 , 20))

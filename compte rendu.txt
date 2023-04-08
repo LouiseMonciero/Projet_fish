@@ -27,3 +27,9 @@ Louise:
     Création des fonctions générant la zone cassable -> fonctions vides.
     Idée de faire  apparaitre un nuage de fumée à la destruction du projectiles.
 Louise.
+
+30 mars : 
+    Avec Loéiz : génération des zones cassables acchevé.
+4 avril :
+    Génération d'un nuage de fumée.
+    A noter, le poisson ne disparait que lorsqu'il touche le sol ou qu'il touche le haut de l'écran.

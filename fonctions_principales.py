@@ -49,6 +49,7 @@ def start_the_game():
   projectile = None  # quand le poisson est en l'air
   munition = None     # quand le poisson est sur la zone de départ
   para_lancer = None    # (vitesse , angle )
+  destruction = 0  #Quand le poisson est detruit, on affiche de la fumée pendant un certain temps
   
   score = 0
   
@@ -151,9 +152,13 @@ def start_the_game():
               x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
               projectile.attribute_pos(x, y)
           else:
+              pos_destruction = (projectile.get_x() , projectile.get_y())
+              destruction = destruction_fish(screen , piece_img_gr, pos_destruction )
               projectile = None
           if (y<= 600) and depasse_sol == False :  #est ce que la deuxieme condition est necessaire ?
              depasse_sol = True
+          if destruction :
+              destruction = destruction_fish(screen , piece_img_gr, pos_destruction)
 
       pygame.display.flip()     #.update()          met à jour la fenêtre de jeu
       timer.tick(60)                      # loop 60/sec

@@ -24,7 +24,7 @@ class fish :
         self.top_left = (x, y)
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
-        print("Mon poisson a les coordonées (topleft): ", self.top_left )
+        #print("Mon poisson a les coordonées (topleft): ", self.top_left )
 
     def draw_fish(self, screen):
         screen.blit(self.image, self.top_left)
@@ -80,7 +80,7 @@ class bouton :
         if self.rect.collidepoint(pos):
             #print('ok_boutton')
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False :     #left clicked
-                print("clicked",pos)
+                #print("clicked",pos)
                 self.clicked = True
                 action = True
             if pygame.mouse.get_pressed()[0] == 0:      #sinon l'action est faite plusieurs fois.
@@ -109,7 +109,7 @@ class bouton :
             return vitesse, angle
         
     def get_x (self):
-        print("le x en question : ", self.rect.topleft[0])
+        #print("le x en question : ", self.rect.topleft[0])
         return self.rect.topleft[0]
     
     def get_y (self):
@@ -178,9 +178,9 @@ def draw_pieces ( screen , t , projectile, n_score):
     for i in range (len(t)):
         screen.blit(t[i].get_img() , t[i].get_topleft())  # blit ( image , (x ,y ))
         if projectile != None :
-            print('poisson :' ,projectile.get_rect( ) , 'piece', i+1 ,':', t[i].get_rect() )
+            #print('poisson :' ,projectile.get_rect( ) , 'piece', i+1 ,':', t[i].get_rect() )
             if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()) :
-                print("Le poisson doit recuperer la piece n°",i+1 )
+                #print("Le poisson doit recuperer la piece n°",i+1 )
                 n_score += 1
             else : 
                 t_new.append( t[i] )
@@ -226,7 +226,6 @@ def create_mat (nb_bloc , chance_or):
             M[ case[0] ][ case[1] ] = 2
             c_or +=1
         cpt_bloc += 1
-    print(c_or)
     return M
 
 def draw_mat ( screen, brique_or_img , bloc_img , M , area): #(x1 , x2 , y1 , y2)
@@ -239,6 +238,18 @@ def draw_mat ( screen, brique_or_img , bloc_img , M , area): #(x1 , x2 , y1 , y2
                 screen.blit ( brique_or_img , (600 + i*50 , 200 + j*50) )
     return M
 
-create_mat (30 , 20)
+loop_destruction_fish = 160
+
+def destruction_fish(screen , nuage_img , pos_projectile):
+    global loop_destruction_fish
+    print(pos_projectile)
+    if loop_destruction_fish != 0:
+        screen.blit( nuage_img , pos_projectile )
+        loop_destruction_fish-= 1
+        return 1
+    else : 
+        loop_destruction_fish = 160
+        return 0
+
 #pos = pygame.mouse.get_pos()
 #.collidepoint(pos)

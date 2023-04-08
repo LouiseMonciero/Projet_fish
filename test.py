@@ -1,5 +1,10 @@
+from projet_angry_fish.projet_functions import *
+import sys
 
-import random
+pygame.init()
 
-n = random.choice( [0,1,2, 7])
-print(n)
+e = False
+if (e == False ):
+    print(" ca va pas")
+elif ( e == None):
+    print("ojk")

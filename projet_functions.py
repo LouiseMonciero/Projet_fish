@@ -1,4 +1,4 @@
-from random import randint , choice
+from random import randint
 from math import atan2, cos, sin, sqrt
 import pygame
 
@@ -176,7 +176,7 @@ def draw_pieces ( screen , t , projectile, n_score):
     blit les pieces sur l'écran, vérifie si le joueur ne ramasse pas une pièce """
     t_new = []
     for i in range (len(t)):
-        screen.blit(t[i].get_img() , t[i].get_topleft())  # blit ( image , (x ,y ))
+        screen.blit(t[i].get_img() , t[i].get_topleft())
         if projectile != None :
             print('poisson :' ,projectile.get_rect( ) , 'piece', i+1 ,':', t[i].get_rect() )
             if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()) :
@@ -189,56 +189,18 @@ def draw_pieces ( screen , t , projectile, n_score):
     return t_new , n_score
 
 #--------------FONCITONS DE LA MATRICE DE LA ZONE CASSABLE.
-def print_mat (M):
-    for i in range (8):
-        for j in range(6):
-            print (M[i][j], end=" ")
-        print("")
 
-def create_mat (nb_bloc , chance_or):
+def create_mat (nb_bloc , rapport):
     """Créer la matrice représentant la zone cassable.
     0: Pas de bloc à cet emplacement
     1: Un bloc à cet emplacement
     2: Une brique d'or à cet emplaement"""
-    M = [[0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0]]
-    #M= [[0]*6]   -> La modification d'un case se repercute sur toute la colonne.
-    cpt_bloc = 0
-    c_or = 0
-    L_indice = []
-    for i in range (11):
-        for j in  range (7):
-            L_indice.append((i,j))
-    while (cpt_bloc < nb_bloc):
-        case = choice (L_indice)
-        L_indice.remove( case )
-        M[ case[0] ][ case[1] ] = 1
-        if randint (0 , 100) < chance_or :
-            M[ case[0] ][ case[1] ] = 2
-            c_or +=1
-        cpt_bloc += 1
-    print(c_or)
+    M= [[0]*6]*8
     return M
 
-def draw_mat ( screen, brique_or_img , bloc_img , M , area): #(x1 , x2 , y1 , y2)
+def draw_mat ( M , area):
     """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
-    for i in range (11):
-        for j in range (7):
-            if M[i][j] == 1:
-                screen.blit ( bloc_img , (600 + i*50 , 200 + j*50) )
-            elif M[i][j] == 2:
-                screen.blit ( brique_or_img , (600 + i*50 , 200 + j*50) )
     return M
 
-create_mat (30 , 20)
 #pos = pygame.mouse.get_pos()
 #.collidepoint(pos)

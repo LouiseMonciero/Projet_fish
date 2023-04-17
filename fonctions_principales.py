@@ -65,6 +65,7 @@ def start_the_game():
     angle = None
     temps_ecoule = 0
     gravite = 0.7
+    e_cinetique = 0
 
     # MES TEXTES
     n_score = 0
@@ -103,7 +104,7 @@ def start_the_game():
 
         # ------------place les blocs
         M = draw_mat(screen, bloc_or_img, brique_img, M, (600, 950, 200, 750))  # (x1 , x2 , y1 , y2 )
-
+        M = break_block_mat(projectile, e_cinetique) 
         # ------------place les boutons
 
         if sardine.draw(screen) and projectile == None:
@@ -127,9 +128,9 @@ def start_the_game():
 
         # -------------variables de lancer/tir
         if munition != None:
-            para_lancer = munition.draw_maintain(screen, (0, 250, 375, 700))
+            para_lancer = munition.draw_maintain(screen, (0, 250, 375, 700))  #para_lancer (vitesse , angle)
 
-        if munition != None and para_lancer != None:  # Est ce que cest les bonnes conditions ?
+        if munition != None and para_lancer != None: 
             temps_ecoule = 0
             x_position = munition.get_x()
             y_position = munition.get_y()
@@ -152,7 +153,7 @@ def start_the_game():
         if munition == None and projectile != None:
             projectile.draw_fish(screen)
             if ((y < 600) or depasse_sol == False) and (y > 0):
-                x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
+                x, y, temps_ecoule, e_cinetique = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, projectile.get_weight(), gravite)
                 projectile.attribute_pos(x, y)
             else:
                 projectile = None

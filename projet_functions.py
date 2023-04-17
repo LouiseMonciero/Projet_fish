@@ -9,7 +9,7 @@ class fish:
     def __init__(self, nom, img, x, y, scale):
         self.nom = nom
         if self.nom == 'sardine':
-            self.poids = randint(10, 30)
+            self.poids = randint(100, 200)
             self.effects = []
         elif self.nom == "globe":
             self.poids = randint(100, 600)
@@ -25,7 +25,7 @@ class fish:
         self.top_left = (x, y)
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
-        print("Mon poisson a les coordonées (topleft): ", self.top_left)
+        #print("Mon poisson a les coordonées (topleft): ", self.top_left)
 
     def draw_fish(self, screen):
         screen.blit(self.image, self.top_left)
@@ -105,7 +105,7 @@ class bouton:
                 (pygame.mouse.get_pos()[0] >= area[0] and pygame.mouse.get_pos()[0] <= area[1]) and (
                 pygame.mouse.get_pos()[1] >= area[2] and pygame.mouse.get_pos()[1] <= area[3])):
             self.rect.topleft = (pos[0] - self.center_clicked[0], pos[1] - self.center_clicked[1])
-            print(pos[0] - self.center_clicked[0])
+            #print(pos[0] - self.center_clicked[0])
         if self.clicked == False and self.maint == True:
             vitesse = (sqrt((100 - pos[0]) ** 2 + (500 - pos[
                 1]) ** 2)) / 5.5  # distance par rapport à (100, 500)    est ce que je fais par rapport à pos, ou tect.topleft.
@@ -114,7 +114,7 @@ class bouton:
             return vitesse, angle
 
     def get_x(self):
-        print("le x en question : ", self.rect.topleft[0])
+        #print("le x en question : ", self.rect.topleft[0])
         return self.rect.topleft[0]
 
     def get_y(self):
@@ -124,14 +124,17 @@ class bouton:
         return self.name
 
 
-def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite):
-    """Calcul la trajectoire d'un obj à partir de son poids (g), sa vitesse (px/s), et sa direction initiale sous forme (x,y)
-    renvoie sa vitesse (px/s), sa direction.
+def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, masse, gravite):
+    """Calcul la trajectoire d'un obj à partir de sa vitesse (px/s), de son angle, du temps écoulé depuis le lancer et sa direction initiale sous forme (x,y)
+    Renvoie le nouveaux temps ecoule, et la nouvelle trajectoire (x, y).
+    On calcul aussi l'energie cinetique du projectile
     Frottement négligés"""
     x = x_position + (vitesse * (cos(angle)) * temps_ecoule)
     y = y_position + (vitesse * (-sin(angle)) * temps_ecoule) + (0.5 * gravite * temps_ecoule ** 2)
     temps_ecoule += 0.25
-    return x, y, temps_ecoule
+    e_cinetique = 0.5* masse * (vitesse **2 )
+    print("masse", masse , "vitesse", vitesse)
+    return x, y, temps_ecoule , e_cinetique
 
 
 def reduction_img(scale, image):
@@ -182,7 +185,7 @@ def draw_pieces(screen, t, projectile, n_score):
     for i in range(len(t)):
         screen.blit(t[i].get_img(), t[i].get_topleft())  # blit ( image , (x ,y ))
         if projectile != None:
-            print('poisson :', projectile.get_rect(), 'piece', i + 1, ':', t[i].get_rect())
+            #print('poisson :', projectile.get_rect(), 'piece', i + 1, ':', t[i].get_rect())
             if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()):
                 print("Le poisson doit recuperer la piece n°", i + 1)
                 n_score += 1
@@ -193,7 +196,7 @@ def draw_pieces(screen, t, projectile, n_score):
     return t_new, n_score
 
 
-# --------------FONCITONS DE LA MATRICE DE LA ZONE CASSABLE.
+# ------------------------------------------------FONCITONS DE LA MATRICE DE LA ZONE CASSABLE.
 def print_mat(M):
     for i in range(8):
         for j in range(6):
@@ -249,7 +252,32 @@ def draw_mat(screen, brique_or_img, bloc_img, M, area):  # (x1 , x2 , y1 , y2)
                 screen.blit(brique_or_img, (600 + i * 50, 200 + j * 50))
     return M
 
+def break_block_mat ( projectile , e_cinetique):
+    """Fonction testant si le poisson est detruit des blocs """
+    if (projectile != None) : 
+        print("Le poisson est detecté par draw mat, e cin : ", e_cinetique)
+        #L'energie cinetique depend du poids du poisson est de la force de tir
+        #L'energe varie entre 48 000 et 61 000.
 
-create_mat(30, 20)
+def create_lives_mat (M):
+    M_lives = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    for i in range(11):
+        for j in range(7):
+            if M[i][j] == 1:
+                M_lives[i][j] = 40000   #energie cinetique basse.
+            elif M[i][j] == 2:
+                M_lives[i][j] = 60000    #energie cinetique haute.
+    return M_lives
+
 # pos = pygame.mouse.get_pos()
 # .collidepoint(pos)

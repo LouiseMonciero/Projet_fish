@@ -64,6 +64,7 @@ class fish:
     def modify_e_cinetique(self, new_ec):
         self.e_cinetique = new_ec
 
+
 class bouton:
     # creer des bouttons à partir des images. Comme on en aura plusieurs,
     # https://www.youtube.com/watch?v=G8MYGDf_9ho
@@ -204,13 +205,13 @@ def draw_pieces(screen, t, projectile, n_score):
 
 class bloc : 
     def __init__(self, x, y, img, type):
-        self.image = pygame.transform.scale(img, (int(img.get_width() * 1), int(img.get_height() * 1)))
+        self.image = img
         if type == 1:
             self.type = type #1 (bloc) ou 2(bloc d'or)
             self.e_cinetique = 40000
         else : 
             self.type = type
-            self.e_cin = 60000
+            self.e_cinetique = 60000
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -218,6 +219,15 @@ class bloc :
 
     def get_img(self):
         return self.image
+    
+    def modify_img (self, new_img):
+        self.image = new_img
+    
+    def get_x(self):
+        return self.x
+    
+    def get_y(self):
+        return self.y
     
     def get_type(self):
         return self.type
@@ -233,64 +243,12 @@ class bloc :
     def modify_e_cinetique (self, new_ec):
         self.e_cinetique = new_ec
 
+def print_mat(M):
+    for i in range(8):
+        for j in range(6):
+            print(M[i][j], end=" ")
+        print("")
 
-def draw_mat(screen, M_bloc , projectile):  # (x1 , x2 , y1 , y2)
-    """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
-    for i in range(11):
-        for j in range(7):
-            if M_bloc[i][j] == None:
-                print("None Type")
-            elif M_bloc[i][j] != None:
-                print("Object")
-                #screen.blit( M_bloc[i][i].get_img() , ( M_bloc[i][i].x , M_bloc[i][i].y )) -> None type has no attributes image.
-                #screen.blit( projectile.get_img() , ( M_bloc[i][i].x , M_bloc[i][i].y )) -> ne marche pas non plus
-                if (projectile != None):
-                    print("Le poisson est detecté par draw mat, e cin : ", projectile.get_e_cinetique() )
-                    if pygame.Rect.colliderect(M_bloc[i][j].get_rect(), projectile.get_rect()):
-                        casse = 0
-                        if (projectile.get_e_cinetique - M_bloc[i][j].get_e_cinetique ) <= 0 :   #si le bloc a plus d'energie que le poisson
-                            M_bloc[i][j].modify_e_cinetique(  M_bloc[i][j].get_e_cinetique - projectile.get_e_cinetique )
-                            projectile = None
-                        else : 
-                            projectile.modify_e_cinetique ( projectile.get_e_cinetique - M_bloc[i][j].get_e_cinetique )
-                            casse = 1
-                        print("Le poisson  est sur un bloc")
-                        if casse ==1:
-                            if M_bloc[i][j].get_type() == 1:
-                                print(" le bloc cassé est normal") 
-                                n_score += 1
-                            elif M_bloc[i][j].get_type() == 2:
-                                print(" le bloc cassé est d'or") 
-                                n_score += 5
-                            M_bloc[i][j] = None
-    return M_bloc , projectile
-
-
-
-def create_mat_bloc(img_bloc , img_bloc_or, nb_bloc , chance_or ):
-    M = create_mat_initial(nb_bloc , chance_or)
-    M_bloc = [[None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None],
-         [None, None, None, None, None, None, None, None, None]]
-    for i in range(11):
-        for j in range(7):
-            x = 600 + i * 50
-            y = 200 + j * 50
-            if M[i][j] == 1:
-                M_bloc[i][j] = bloc(x , y , img_bloc ,1)   #energie cinetique basse.
-            elif M[i][j] == 2:
-                M_bloc[i][j] = bloc(x , y, img_bloc_or ,2)   #energie cinetique haute.
-            else:
-                M[i][j] = None    
-    return M_bloc
 
 def create_mat_initial(nb_bloc, chance_or):
     """Créer la matrice représentant la zone cassable.
@@ -327,12 +285,73 @@ def create_mat_initial(nb_bloc, chance_or):
     print(c_or)
     return M
 
-def print_mat(M):
-    for i in range(8):
-        for j in range(6):
-            print(M[i][j], end=" ")
-        print("")
+
+def draw_mat(screen, M_bloc , projectile, image_bloc_casse, score, n_tir):  # (x1 , x2 , y1 , y2)
+    """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
+    for i in range(11):
+        for j in range(7):
+            if M_bloc[i][j] != None:
+                #print("Object")
+                screen.blit( M_bloc[i][j].get_img() , ( M_bloc[i][j].x , M_bloc[i][j].y )) #-> None type has no attributes image.
+                #screen.blit( projectile.get_img() , ( M_bloc[i][i].x , M_bloc[i][i].y )) #-> ne marche pas non plus
+                #screen.blit( image, ( M_bloc[i][i].get_x() , M_bloc[i][i].get_y() ))
+                if (projectile != None):
+                    print("Le poisson est detecté par draw mat, e cin : ", projectile.get_e_cinetique() )
+                    if pygame.Rect.colliderect(M_bloc[i][j].get_rect(), projectile.get_rect()):
+                        casse = 0
+                        if (projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique() ) <= 0 :   #si le bloc a plus d'energie que le poisson
+                            M_bloc[i][j].modify_e_cinetique(  M_bloc[i][j].get_e_cinetique() - projectile.get_e_cinetique() )
+                            projectile = None
+                            n_tir -=1
+                            if M_bloc[i][j].get_type() == 1:
+                                M_bloc[i][j].modify_img(image_bloc_casse)
+                        else : 
+                            projectile.modify_e_cinetique ( projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique() )
+                            casse = 1
+                        print("Le poisson  est sur un bloc")
+                        if casse ==1:
+                            if M_bloc[i][j].get_type() == 1:
+                                print(" le bloc cassé est normal") 
+                                score += 1
+                            elif M_bloc[i][j].get_type() == 2:
+                                print(" le bloc cassé est d'or") 
+                                score += 5
+                            M_bloc[i][j] = None
+    return M_bloc , projectile , score , n_tir
 
 
+
+def create_mat_bloc(img_bloc , img_bloc_or, nb_bloc , chance_or ):
+    M = create_mat_initial(nb_bloc , chance_or)
+    M_bloc = [[None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None],
+         [None, None, None, None, None, None, None, None, None]]
+    for i in range(11):
+        for j in range(7):
+            x = 600 + i * 50
+            y = 200 + j * 50
+            if M[i][j] == 1:
+                M_bloc[i][j] = bloc(x , y , img_bloc ,1)   #energie cinetique basse.
+                #print( M_bloc[i][j].get_x())
+            elif M[i][j] == 2:
+                M_bloc[i][j] = bloc(x , y, img_bloc_or ,2)   #energie cinetique haute.
+            else:
+                M[i][j] = None 
+    return M_bloc
+
+def test():
+    b= bloc(10,20, "image", 2)
+    print( b.get_x())
+
+
+#test()
 # pos = pygame.mouse.get_pos()
 # .collidepoint(pos)

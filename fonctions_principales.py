@@ -7,8 +7,7 @@ diff = 1
 nb_joueur = 1
 pseudo = "pseudo"  # si pas de pseudo saisie
 
-para_jeu = [(7, float('inf'), 20, 30), (5, 10, 15, 35),
-            (3, 6, 10, 50)]  # (nb_pieces , nombre de tir , chance d'avoir brique_or / brique , nb_briques)
+para_jeu = [(7, float('inf'), 20, 30), (5, 20, 15, 35), (3, 10, 10, 50)]  # (nb_pieces , nombre de tir , chance d'avoir brique_or / brique , nb_briques)
 
 
 def start_the_game():
@@ -27,6 +26,7 @@ def start_the_game():
     piece_img_gr = pygame.image.load("piece.png").convert_alpha()
     brique_img = pygame.image.load("brique.png").convert_alpha()
     bloc_or_img = pygame.image.load("bloc_or.png").convert_alpha()
+    brique_casse_img = pygame.image.load("brique_casse.png").convert_alpha()
     fumee_img = pygame.image.load("fumee.png").convert_alpha()
 
     mer = pygame.transform.scale(mer_img, (1000, 700))
@@ -54,6 +54,10 @@ def start_the_game():
     para_lancer = None  # (vitesse , angle )
 
     score = 0
+    if diff == 0:
+        n_tir = "infini"
+    else :
+        n_tir = para_jeu[diff][1]
 
     timer = pygame.time.Clock()
     game_on = True
@@ -68,10 +72,9 @@ def start_the_game():
     e_cinetique = 0
 
     # MES TEXTES
-    n_score = 0
     police = pygame.font.SysFont("bold", 20)  # prend en parametre le police d'écriture et la taille.
     image_score = police.render("SCORE:", 1, (0, 0, 0))  # (0,0,0) est le code RGB.
-    image_n_score = police.render(str(n_score), 1, (0, 0, 0))
+    image_n_tir = police.render("NOMBRE DE TIR:", 1, (0, 0, 0))
 
     # MES PIECES
     nb_pieces = para_jeu[diff][0]
@@ -83,8 +86,6 @@ def start_the_game():
 
     while game_on:
         screen.blit(mer, (0, 0))
-        screen.blit(image_score, (40, 20))
-        screen.blit(police.render(str(n_score), 1, (0, 0, 0)), (100, 20))
         # ------------quitter le jeu
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -95,13 +96,18 @@ def start_the_game():
         screen.blit(sable, (0, 600))  # coin supp gauche
         screen.blit(depart, (100, 525))
 
+        #--------------place les textes
+        screen.blit(image_score, (40, 20))
+        screen.blit(police.render(str(score), 1, (0, 0, 0)), (100, 20))
+        screen.blit(image_n_tir, (170, 20))
+        screen.blit(police.render(str( n_tir), 1, (0, 0, 0)), (300, 20))
 
         # ------------place les pièces
 
-        tab_pieces, n_score = draw_pieces(screen, tab_pieces, projectile, n_score)
+        tab_pieces, score = draw_pieces(screen, tab_pieces, projectile, score)
 
         # ------------place les blocs
-        M_bloc , projectile = draw_mat(screen, M_bloc, projectile)  # (x1 , x2 , y1 , y2 )
+        M_bloc , projectile , score , n_tir = draw_mat(screen, M_bloc, projectile, brique_casse_img ,score, n_tir)  # (x1 , x2 , y1 , y2 )
         # ------------place les boutons
 
         if sardine.draw(screen) and projectile == None:
@@ -153,7 +159,9 @@ def start_the_game():
                 x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
                 projectile.attribute_pos(x, y)
             else:
-                projectile = None
+                projectile = None                    # disparition du poisson !!!!!!!
+                if diff != 0:
+                    n_tir -= 1
             if (y <= 600) and depasse_sol == False:  # est ce que la deuxieme condition est necessaire ?
                 depasse_sol = True
         pygame.display.flip()  # .update()          met à jour la fenêtre de jeu

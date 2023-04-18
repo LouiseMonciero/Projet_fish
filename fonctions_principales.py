@@ -78,10 +78,8 @@ def start_the_game():
     tab_pieces = generate_piece(nb_pieces, (100, 1000, 0, 500), piece_img)
 
     # MES BLOCS
-    M = create_mat(para_jeu[diff][3], para_jeu[diff][2])
-    print_mat(M)  # test
-
-
+    M_bloc = create_mat_bloc(brique_img, bloc_or_img, para_jeu[diff][3], para_jeu[diff][2])
+    print_mat(M_bloc)   #ok
 
     while game_on:
         screen.blit(mer, (0, 0))
@@ -103,8 +101,7 @@ def start_the_game():
         tab_pieces, n_score = draw_pieces(screen, tab_pieces, projectile, n_score)
 
         # ------------place les blocs
-        M = draw_mat(screen, bloc_or_img, brique_img, M, (600, 950, 200, 750))  # (x1 , x2 , y1 , y2 )
-        M = break_block_mat(projectile, e_cinetique) 
+        M_bloc , projectile = draw_mat(screen, M_bloc, projectile)  # (x1 , x2 , y1 , y2 )
         # ------------place les boutons
 
         if sardine.draw(screen) and projectile == None:
@@ -139,12 +136,12 @@ def start_the_game():
             else:
                 depasse_sol = None
             if munition.get_name() == 'sardine':
-                projectile = fish("sardine", sardine_img, x_position, y_position, 0.3)
+                projectile = fish("sardine", sardine_img, x_position, y_position, 0.3 , para_lancer[0])
                 # projectile = fish("sardine", sardine_img, 100, 500, 0.3)
             elif munition.get_name() == 'globe':
-                projectile = fish("globe", globe_img, x_position, y_position, 0.1)
+                projectile = fish("globe", globe_img, x_position, y_position, 0.1,  para_lancer[0])
             elif munition.get_name() == 'rouge':
-                projectile = fish("rouge", rouge_img, x_position, y_position, 0.15)
+                projectile = fish("rouge", rouge_img, x_position, y_position, 0.15,  para_lancer[0])
             vitesse = para_lancer[0]
             angle = para_lancer[1]
             para_lancer = None
@@ -153,7 +150,7 @@ def start_the_game():
         if munition == None and projectile != None:
             projectile.draw_fish(screen)
             if ((y < 600) or depasse_sol == False) and (y > 0):
-                x, y, temps_ecoule, e_cinetique = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, projectile.get_weight(), gravite)
+                x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
                 projectile.attribute_pos(x, y)
             else:
                 projectile = None

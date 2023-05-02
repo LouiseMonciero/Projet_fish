@@ -7,8 +7,7 @@ diff = 1
 nb_joueur = 1
 pseudo = "pseudo"  # si pas de pseudo saisie
 
-para_jeu = [(7, float('inf'), 20, 30), (5, 10, 15, 35),
-            (3, 6, 10, 50)]  # (nb_pieces , nombre de tir , chance d'avoir brique_or / brique , nb_briques)
+para_jeu = [(7, float('inf'), 20, 30), (5, 20, 15, 35), (3, 10, 10, 50)]  # (nb_pieces , nombre de tir , chance d'avoir brique_or / brique , nb_briques)
 
 
 def start_the_game():
@@ -27,6 +26,7 @@ def start_the_game():
     piece_img_gr = pygame.image.load("piece.png").convert_alpha()
     brique_img = pygame.image.load("brique.png").convert_alpha()
     bloc_or_img = pygame.image.load("bloc_or.png").convert_alpha()
+    brique_casse_img = pygame.image.load("brique_casse.png").convert_alpha()
     fumee_img = pygame.image.load("fumee.png").convert_alpha()
 
     mer = pygame.transform.scale(mer_img, (1000, 700))
@@ -49,11 +49,19 @@ def start_the_game():
     # button_lancer = bouton(10, 525, button_img, 0.1, '')
 
     # VARIABLES
+    a_joueur = 0
     projectile = None  # quand le poisson est en l'air
     munition = None  # quand le poisson est sur la zone de départ
     para_lancer = None  # (vitesse , angle )
 
-    score = 0
+    score = [0] * nb_joueur
+
+    n_tir = [0] * nb_joueur
+    for i in range (len(n_tir)):
+        if diff == 0:
+            n_tir[i] = 0
+        else :
+            n_tir[i] = para_jeu[diff][1]
 
     timer = pygame.time.Clock()
     game_on = True
@@ -68,25 +76,35 @@ def start_the_game():
     e_cinetique = 0
 
     # MES TEXTES
-    n_score = 0
     police = pygame.font.SysFont("bold", 20)  # prend en parametre le police d'écriture et la taille.
-    image_score = police.render("SCORE:", 1, (0, 0, 0))  # (0,0,0) est le code RGB.
-    image_n_score = police.render(str(n_score), 1, (0, 0, 0))
+    image_score = police.render("SCORE :", 1, (0, 0, 0))  # (0,0,0) est le code RGB.
+    image_n_tir = police.render("NOMBRE DE TIR :", 1, (0, 0, 0))
 
     # MES PIECES
     nb_pieces = para_jeu[diff][0]
-    tab_pieces = generate_piece(nb_pieces, (100, 1000, 0, 500), piece_img)
+    tab_pieces = [0]*nb_joueur
+    M_piece = generate_piece(nb_pieces, (100, 1000, 0, 500), piece_img)
+    for i in range (len(tab_pieces)):
+        tab_pieces[i] = M_piece
 
     # MES BLOCS
-    M = create_mat(para_jeu[diff][3], para_jeu[diff][2])
-    print_mat(M)  # test
+    M = create_mat_initial(para_jeu[diff][3], para_jeu[diff][2]) # nb_bloc, chance_or
+    Mat_bloc_j = [0]*nb_joueur
+    for i in range (len(Mat_bloc_j)):
+        Mat_bloc_j[i] = create_mat_bloc(brique_img, bloc_or_img, M)
 
+
+    # MES JOUEURS
+    Mes_joueurs = [0] * nb_joueur  # initialisation d'un tableau contenant les numeros des joueurs
+    for i in range(len(Mes_joueurs)):
+        Mes_joueurs[i] = i
+
+    police_joueur = pygame.font.SysFont("bold", 40)
+    image_joueur = police_joueur.render("Au tour du joueur ", 1, (0, 0, 0))
 
 
     while game_on:
         screen.blit(mer, (0, 0))
-        screen.blit(image_score, (40, 20))
-        screen.blit(police.render(str(n_score), 1, (0, 0, 0)), (100, 20))
         # ------------quitter le jeu
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -97,14 +115,27 @@ def start_the_game():
         screen.blit(sable, (0, 600))  # coin supp gauche
         screen.blit(depart, (100, 525))
 
+        #--------------place les textes
+        screen.blit(image_n_tir, (40, 20))
+        screen.blit(police.render(str( n_tir[a_joueur]), 1, (0, 0, 0)), (160, 20))
+
+        if (nb_joueur != 1) :
+            screen.blit(image_joueur, (40, 635))
+            screen.blit(police_joueur.render(str(a_joueur + 1), 1, (0, 0, 0)), (290, 635))
+
+        screen.blit(image_score, (200, 20))
+        print_score(screen, nb_joueur, score, police)
+
 
         # ------------place les pièces
 
-        tab_pieces, n_score = draw_pieces(screen, tab_pieces, projectile, n_score)
+        tab_pieces[a_joueur], score[a_joueur] = draw_pieces(screen, tab_pieces[a_joueur], projectile, score[a_joueur])
 
         # ------------place les blocs
-        M = draw_mat(screen, bloc_or_img, brique_img, M, (600, 950, 200, 750))  # (x1 , x2 , y1 , y2 )
-        M = break_block_mat(projectile, e_cinetique) 
+        Mat_bloc_j[a_joueur] , projectile , score[a_joueur] , n_tir[a_joueur], a_joueur = draw_mat(screen, Mat_bloc_j[a_joueur], projectile, brique_casse_img ,score[a_joueur], n_tir[a_joueur], a_joueur, nb_joueur, diff)  # (x1 , x2 , y1 , y2 )
+
+
+
         # ------------place les boutons
 
         if sardine.draw(screen) and projectile == None:
@@ -130,7 +161,7 @@ def start_the_game():
         if munition != None:
             para_lancer = munition.draw_maintain(screen, (0, 250, 375, 700))  #para_lancer (vitesse , angle)
 
-        if munition != None and para_lancer != None: 
+        if munition != None and para_lancer != None:
             temps_ecoule = 0
             x_position = munition.get_x()
             y_position = munition.get_y()
@@ -139,12 +170,12 @@ def start_the_game():
             else:
                 depasse_sol = None
             if munition.get_name() == 'sardine':
-                projectile = fish("sardine", sardine_img, x_position, y_position, 0.3)
+                projectile = fish("sardine", sardine_img, x_position, y_position, 0.3 , para_lancer[0])
                 # projectile = fish("sardine", sardine_img, 100, 500, 0.3)
             elif munition.get_name() == 'globe':
-                projectile = fish("globe", globe_img, x_position, y_position, 0.1)
+                projectile = fish("globe", globe_img, x_position, y_position, 0.1,  para_lancer[0])
             elif munition.get_name() == 'rouge':
-                projectile = fish("rouge", rouge_img, x_position, y_position, 0.15)
+                projectile = fish("rouge", rouge_img, x_position, y_position, 0.15,  para_lancer[0])
             vitesse = para_lancer[0]
             angle = para_lancer[1]
             para_lancer = None
@@ -152,13 +183,22 @@ def start_the_game():
 
         if munition == None and projectile != None:
             projectile.draw_fish(screen)
-            if ((y < 600) or depasse_sol == False) and (y > 0):
-                x, y, temps_ecoule, e_cinetique = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, projectile.get_weight(), gravite)
+            if ((y < 600) or depasse_sol == False) and (y > 0) and (x>-50) and (x<1200):
+                x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
+                print("x =", x)
                 projectile.attribute_pos(x, y)
             else:
-                projectile = None
+                projectile = None                    # disparition du poisson !!!!!!!
+                if diff != 0:
+                    n_tir[a_joueur] -= 1
+                    if (a_joueur == nb_joueur - 1):
+                        a_joueur = 0
+                    else:
+                        a_joueur = a_joueur + 1
+
             if (y <= 600) and depasse_sol == False:  # est ce que la deuxieme condition est necessaire ?
                 depasse_sol = True
+
         pygame.display.flip()  # .update()          met à jour la fenêtre de jeu
         timer.tick(60)  # loop 60/sec
 
@@ -212,7 +252,7 @@ def regle_jeu():  # fct pour la partie regle dans le menu
                 pygame.quit()
                 exit()
         pygame.display.flip()  # .update()          met à jour la fenêtre de jeu
-        timer.tick(10)  # loop 60/sec
+        timer.tick(60)  # loop 60/sec
 
 
 def set_difficulty(value, difficulty):

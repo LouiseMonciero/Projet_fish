@@ -64,6 +64,12 @@ class fish:
     def modify_e_cinetique(self, new_ec):
         self.e_cinetique = new_ec
 
+    def get_e_cinetique(self):
+        return self.e_cinetique
+
+    def modify_e_cinetique(self, new_ec):
+        self.e_cinetique = new_ec
+
 
 class bouton:
     # creer des bouttons à partir des images. Comme on en aura plusieurs,

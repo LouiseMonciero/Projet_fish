@@ -27,3 +27,7 @@ Louise:
     Création des fonctions générant la zone cassable -> fonctions vides.
     Idée de faire  apparaitre un nuage de fumée à la destruction du projectiles.
 Louise.
+17 avril : 
+    les blocs sont cassables,
+    il y a la variables n_tir affiché à l'ecran
+    Le bloc change d'allure s'il a deja été touché mais il est pas supprimé

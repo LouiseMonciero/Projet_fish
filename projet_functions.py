@@ -214,10 +214,10 @@ class bloc:
         self.image = img
         if type == 1:
             self.type = type  # 1 (bloc) ou 2(bloc d'or)
-            self.e_cinetique = 40000
+            self.e_cinetique = 50000
         else:
             self.type = type
-            self.e_cinetique = 60000
+            self.e_cinetique = 100000
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

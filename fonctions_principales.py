@@ -16,18 +16,21 @@ def start_the_game():
     screen = pygame.display.set_mode((1000, 700))  # largeur hauteur
 
     # MES IMAGES
-    mer_img = pygame.image.load("mer.png").convert_alpha()
-    sable_img = pygame.image.load("sable.png").convert_alpha()
-    depart_gd = pygame.image.load("lance_pierre.png").convert_alpha()
-    sardine_img = pygame.image.load("saumon.png").convert_alpha()
-    globe_img = pygame.image.load("globe.png").convert_alpha()
-    rouge_img = pygame.image.load("poisson_rouge.png").convert_alpha()
-    # button_img = pygame.image.load("bouton.png").convert_alpha()
-    piece_img_gr = pygame.image.load("piece.png").convert_alpha()
-    brique_img = pygame.image.load("brique.png").convert_alpha()
-    bloc_or_img = pygame.image.load("bloc_or.png").convert_alpha()
-    brique_casse_img = pygame.image.load("brique_casse.png").convert_alpha()
-    fumee_img = pygame.image.load("fumee.png").convert_alpha()
+    mer_img = pygame.image.load("images/mer.png").convert_alpha()
+    sable_img = pygame.image.load("images/sable.png").convert_alpha()
+    depart_gd = pygame.image.load("images/lance_pierre.png").convert_alpha()
+
+
+    sardine_img = pygame.image.load("images/saumon.png").convert_alpha()
+    globe_img = pygame.image.load("images/globe.png").convert_alpha()
+    rouge_img = pygame.image.load("images/poisson_rouge.png").convert_alpha()
+
+    # button_img = pygame.image.load("images/bouton.png").convert_alpha()
+    piece_img_gr = pygame.image.load("images/piece.png").convert_alpha()
+    brique_img = pygame.image.load("images/brique.png").convert_alpha()
+    bloc_or_img = pygame.image.load("images/bloc_or.png").convert_alpha()
+    brique_casse_img = pygame.image.load("images/brique_casse.png").convert_alpha()
+    fumee_img = pygame.image.load("images/fumee.png").convert_alpha()
 
     mer = pygame.transform.scale(mer_img, (1000, 700))
     piece_img = pygame.transform.scale(piece_img_gr, (piece_img_gr.get_width() * 0.1, piece_img_gr.get_height() * 0.1))
@@ -63,6 +66,8 @@ def start_the_game():
         else :
             n_tir[i] = para_jeu[diff][1]
 
+    nb_grossissement = None  # permet de donner un nombre maximal de grossissement à globe en vérifiant si cette valeur est strictement supérieure à 0
+
     timer = pygame.time.Clock()
     game_on = True
 
@@ -74,6 +79,8 @@ def start_the_game():
     temps_ecoule = 0
     gravite = 0.7
     e_cinetique = 0
+
+
 
     # MES TEXTES
     police = pygame.font.SysFont("bold", 20)  # prend en parametre le police d'écriture et la taille.
@@ -110,6 +117,12 @@ def start_the_game():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+        # vérification si la touche "e" a été appuyée
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_e and projectile is not None and projectile.get_name_poisson() == "globe" and nb_grossissement > 0: # vérifie si le projectile en cours d'utilisation est "globe" et si la touche "e" est appuyée
+                nb_grossissement -= 1 # enlève un grossissement à "globe", est réinitialisé à une valeur donnée à chaque fois que "globe" est sélectionné
+                projectile.modify_scale_and_weight(2,0.25) # augmente la taille de "globe" par 2 et son poid par 4
+            elif projectile is not None and projectile.get_name_poisson() == "globe":
+                print(f"Ec du globe:{projectile.get_e_cinetique()}")
 
         # -------------place les surfaces
         screen.blit(sable, (0, 600))  # coin supp gauche
@@ -141,19 +154,21 @@ def start_the_game():
         if sardine.draw(screen) and projectile == None:
             x = 100
             y = 500
-            print('sardine clicked')
+            #print('sardine clicked')
             munition = bouton(100, 500, sardine_img, 0.3, 'sardine')
+
         if globe.draw(screen) and projectile == None:
             x = 100
             y = 500
-            print('globe clicked')
+            #print('globe clicked')
             munition = bouton(100, 500, globe_img, 0.1, 'globe')
             # munition = fish("globe", globe_img, 100, 500, 0.1)
+            nb_grossissement = 1  # permet de donner un nombre maximal de grossissement à globe en vérifiant si cette valeur est strictement supérieure à 0
 
         if rouge.draw(screen) and projectile == None:
             x = 100
             y = 500
-            print('rouge clicked')
+            #print('rouge clicked')
             munition = bouton(100, 500, rouge_img, 0.15, 'rouge')
             # munition = fish("rouge", rouge_img, 100, 500, 0.15)
 
@@ -185,7 +200,7 @@ def start_the_game():
             projectile.draw_fish(screen)
             if ((y < 600) or depasse_sol == False) and (y > 0) and (x>-50) and (x<1200):
                 x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
-                print("x =", x)
+                #print("x =", x)
                 projectile.attribute_pos(x, y)
             else:
                 projectile = None                    # disparition du poisson !!!!!!!
@@ -203,12 +218,15 @@ def start_the_game():
         timer.tick(60)  # loop 60/sec
 
 
+
+
+# ----------------------- RULES ----------------------- #
 def regle_jeu():  # fct pour la partie regle dans le menu
     screen = pygame.display.set_mode((1000, 700))
-    fond_regle = pygame.image.load("fond_regle_temporaire.jpg").convert_alpha()
-    bombe = pygame.image.load("bombe.png").convert_alpha()
-    piece = pygame.image.load("piece.png").convert_alpha()
-    retour = pygame.image.load("retour.png").convert_alpha()
+    fond_regle = pygame.image.load("images/fond_regle_temporaire.jpg").convert_alpha()
+    bombe = pygame.image.load("images/bombe.png").convert_alpha()
+    piece = pygame.image.load("images/piece.png").convert_alpha()
+    retour = pygame.image.load("images/retour.png").convert_alpha()
     fond_regle = pygame.transform.scale(fond_regle, (1000, 700))
     bombe = pygame.transform.scale(bombe, (50, 50))
     piece = pygame.transform.scale(piece, (50, 50))
@@ -254,7 +272,7 @@ def regle_jeu():  # fct pour la partie regle dans le menu
         pygame.display.flip()  # .update()          met à jour la fenêtre de jeu
         timer.tick(60)  # loop 60/sec
 
-
+# ----------------------- OTHER ----------------------- #
 def set_difficulty(value, difficulty):
     """la variable diff sauvegarde la difficulté
     0: Facile

@@ -2,13 +2,13 @@ from random import randint, choice
 from math import atan2, cos, sin, sqrt
 import pygame
 
-
+ # ----------------------- CLASSES ----------------------- #
 class fish:
     """ensemble des munition"""
 
     def __init__(self, nom, img, x, y, scale, vitesse):
         self.nom = nom
-        if self.nom == 'sardine':
+        if self.nom == "sardine":
             self.poids = randint(100, 200)
             self.effects = []
         elif self.nom == "globe":
@@ -28,6 +28,12 @@ class fish:
         self.e_cinetique = 0.5 * self.poids * (vitesse ** 2)
         # print("Mon poisson a les coordonées (topleft): ", self.top_left)
 
+    def modify_scale_and_weight(self, scale_multiplier, weight_multiplier): # méthode permettant d'appliquer une multiplicateur à la taille ( multi < 1) et au poid (multi > 1) d'un poisson
+        self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*scale_multiplier), int(self.image.get_height()*scale_multiplier)))
+        self.poids*=weight_multiplier
+
+    def get_name_poisson(self): # méthode permettant de récupérer le nom d'un poisson
+        return self.nom
     def draw_fish(self, screen):
         screen.blit(self.image, self.top_left)
 
@@ -64,13 +70,6 @@ class fish:
     def modify_e_cinetique(self, new_ec):
         self.e_cinetique = new_ec
 
-    def get_e_cinetique(self):
-        return self.e_cinetique
-
-    def modify_e_cinetique(self, new_ec):
-        self.e_cinetique = new_ec
-
-
 class bouton:
     # creer des bouttons à partir des images. Comme on en aura plusieurs,
     # https://www.youtube.com/watch?v=G8MYGDf_9ho
@@ -95,7 +94,7 @@ class bouton:
         if self.rect.collidepoint(pos):
             # print('ok_boutton')
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:  # left clicked
-                print("clicked", pos)
+                #print("clicked", pos)
                 self.clicked = True
                 action = True
             if pygame.mouse.get_pressed()[0] == 0:  # sinon l'action est faite plusieurs fois.
@@ -136,36 +135,6 @@ class bouton:
     def get_name(self):
         return self.name
 
-
-def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite):
-    """Calcul la trajectoire d'un obj à partir de sa vitesse (px/s), de son angle, du temps écoulé depuis le lancer et sa direction initiale sous forme (x,y)
-    Renvoie le nouveaux temps ecoule, et la nouvelle trajectoire (x, y).
-    On calcul aussi l'energie cinetique du projectile
-    Frottement négligés"""
-    x = x_position + (vitesse * (cos(angle)) * temps_ecoule)
-    y = y_position + (vitesse * (-sin(angle)) * temps_ecoule) + (0.5 * gravite * temps_ecoule ** 2)
-    temps_ecoule += 0.25
-    return x, y, temps_ecoule
-
-
-def reduction_img(scale, image):
-    width = image.get_with
-    height = image.get_height()
-    image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
-    return image
-
-
-def generate_piece(n, area, image):
-    """int -> tab[ pieces ]
-    nombre de piece à placer sur l'ecran dans une zone delimité (x1, x2, y1, y2) """
-    t = []
-    for i in range(n):
-        t.append((randint(area[0], area[1]), randint(area[2], area[3])))
-        t[i] = pieces(image, t[i][0], t[i][1])
-        # screen.blit(image , (t[i]))
-    return t
-
-
 class pieces:
     def __init__(self, image, x, y):
         self.img = image
@@ -186,28 +155,6 @@ class pieces:
         # self.rect renvoi un tableau (x1 , y1, largeur , hauteur )
         t = self.rect
         return t
-
-
-def draw_pieces(screen, t, projectile, n_score):
-    # cette fonction ne peut pas etre integrer dans la classe pices en raison de la boucle
-    """tab[ pieces ] -> tab[ pieces ]
-    blit les pieces sur l'écran, vérifie si le joueur ne ramasse pas une pièce """
-    t_new = []
-    for i in range(len(t)):
-        screen.blit(t[i].get_img(), t[i].get_topleft())  # blit ( image , (x ,y ))
-        if projectile != None:
-            # print('poisson :', projectile.get_rect(), 'piece', i + 1, ':', t[i].get_rect())
-            if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()):
-                print("Le poisson doit recuperer la piece n°", i + 1)
-                n_score += 1
-            else:
-                t_new.append(t[i])
-        else:
-            t_new.append(t[i])
-    return t_new, n_score
-
-
-# ------------------------------------------------FONCITONS DE LA MATRICE DE LA ZONE CASSABLE.
 
 class bloc:
     def __init__(self, x, y, img, type):
@@ -250,6 +197,57 @@ class bloc:
         self.e_cinetique = new_ec
 
 
+# ----------------------- FONCITONS DIVERSES ----------------------- #
+def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite):
+    """Calcul la trajectoire d'un obj à partir de sa vitesse (px/s), de son angle, du temps écoulé depuis le lancer et sa direction initiale sous forme (x,y)
+    Renvoie le nouveaux temps ecoule, et la nouvelle trajectoire (x, y).
+    On calcul aussi l'energie cinetique du projectile
+    Frottement négligés"""
+    x = x_position + (vitesse * (cos(angle)) * temps_ecoule)
+    y = y_position + (vitesse * (-sin(angle)) * temps_ecoule) + (0.5 * gravite * temps_ecoule ** 2)
+    temps_ecoule += 0.25
+    return x, y, temps_ecoule
+
+
+def reduction_img(scale, image):
+    width = image.get_width
+    height = image.get_height()
+    image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+    return image
+
+
+def generate_piece(n, area, image):
+    """int -> tab[ pieces ]
+    nombre de piece à placer sur l'ecran dans une zone delimité (x1, x2, y1, y2) """
+    t = []
+    for i in range(n):
+        t.append((randint(area[0], area[1]), randint(area[2], area[3])))
+        t[i] = pieces(image, t[i][0], t[i][1])
+        # screen.blit(image , (t[i]))
+    return t
+
+
+def draw_pieces(screen, t, projectile, n_score):
+    # cette fonction ne peut pas etre integrer dans la classe pices en raison de la boucle
+    """tab[ pieces ] -> tab[ pieces ]
+    blit les pieces sur l'écran, vérifie si le joueur ne ramasse pas une pièce """
+    t_new = []
+    for i in range(len(t)):
+        screen.blit(t[i].get_img(), t[i].get_topleft())  # blit ( image , (x ,y ))
+        if projectile != None:
+            # print('poisson :', projectile.get_rect(), 'piece', i + 1, ':', t[i].get_rect())
+            if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()):
+                #print("Le poisson doit recuperer la piece n°", i + 1)
+                n_score += 1
+            else:
+                t_new.append(t[i])
+        else:
+            t_new.append(t[i])
+    return t_new, n_score
+
+
+
+# ----------------------- FONCITONS DE LA MATRICE DE LA ZONE CASSABLE ----------------------- #
 def print_mat(M):
     for i in range(8):
         for j in range(6):
@@ -289,7 +287,7 @@ def create_mat_initial(nb_bloc, chance_or):
             M[case[0]][case[1]] = 2
             c_or += 1
         cpt_bloc += 1
-    print(c_or)
+    #print(c_or)
     return M
 
 
@@ -326,13 +324,13 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                         else:
                             projectile.modify_e_cinetique(projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique())
                             casse = 1
-                        print("Le poisson  est sur un bloc")
+                        #print("Le poisson  est sur un bloc")
                         if casse == 1:
                             if M_bloc[i][j].get_type() == 1:
-                                print(" le bloc cassé est normal")
+                                #print(" le bloc cassé est normal")
                                 score += 1
                             elif M_bloc[i][j].get_type() == 2:
-                                print(" le bloc cassé est d'or")
+                                #print(" le bloc cassé est d'or")
                                 score += 5
                             M_bloc[i][j] = None
     return M_bloc, projectile, score, n_tir, a_joueur

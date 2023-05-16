@@ -3,7 +3,7 @@ import pygame_menu   #https://github.com/ppizarror/pygame-menu
 import sys
 from projet_functions import *
 from fonctions_principales import *
-print("\nHello from the creators of the game, go directly to the pygame console to play please\n")
+print("\nHello from the creators of the game, thanks to play with us !\n")
 pygame.init()
 #MON ECRAN
 screen = pygame.display.set_mode((1000, 700))   # largeur hauteur

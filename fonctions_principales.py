@@ -130,14 +130,26 @@ def start_the_game():
 
         #--------------place les textes
         screen.blit(image_n_tir, (40, 20))
-        screen.blit(police.render(str( n_tir[a_joueur]), 1, (0, 0, 0)), (160, 20))
+        screen.blit(police.render(str(n_tir[a_joueur]), 1, (0, 0, 0)), (160, 20))
 
         if (nb_joueur != 1) :
             screen.blit(image_joueur, (40, 635))
             screen.blit(police_joueur.render(str(a_joueur + 1), 1, (0, 0, 0)), (290, 635))
 
         screen.blit(image_score, (200, 20))
-        print_score(screen, nb_joueur, score, police)
+
+        winner_is = -1 # personne ne gagne
+        current_player = 0
+        while (current_player < nb_joueur and winner_is == -1) :
+            if (score[current_player] >= 20) :
+                winner_is = current_player
+            current_player += 1
+
+        if (winner_is == -1 and n_tir[a_joueur] > 0):
+            print_score(screen, nb_joueur, score, police)
+        else:
+            print_gameover(screen, winner_is, nb_joueur)
+            game_on = False
 
 
         # ------------place les pièces

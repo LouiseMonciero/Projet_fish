@@ -251,7 +251,7 @@ def draw_pieces(screen, t, projectile, n_score):
 
 
 
-# ----------------------- FONCITONS DE LA MATRICE DE LA ZONE CASSABLE ----------------------- #
+# ----------------------- FONCTIONS DE LA MATRICE DE LA ZONE CASSABLE ----------------------- #
 def print_mat(M):
     for i in range(8):
         for j in range(6):
@@ -309,10 +309,8 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                     #print("Le poisson est detecté par draw mat, e cin : ", projectile.get_e_cinetique())
                     if pygame.Rect.colliderect(M_bloc[i][j].get_rect(), projectile.get_rect()):
                         casse = 0
-                        if (projectile.get_e_cinetique() - M_bloc[i][
-                            j].get_e_cinetique()) <= 0:  # si le bloc a plus d'energie que le poisson
-                            M_bloc[i][j].modify_e_cinetique(
-                                M_bloc[i][j].get_e_cinetique() - projectile.get_e_cinetique())
+                        if (projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique()) <= 0:  # si le bloc a plus d'energie que le poisson
+                            M_bloc[i][j].modify_e_cinetique(M_bloc[i][j].get_e_cinetique() - projectile.get_e_cinetique())
                             projectile = None
                             if (diff != 0):
                                 n_tir -= 1
@@ -393,3 +391,28 @@ def print_score(screen, nb_joueur, score, police):
     if (nb_joueur >= 5):
         screen.blit(police.render("joueur 5 :", 1, (0, 0, 0)), (770, 20))
         screen.blit(police.render(str(score[4]), 1, (0, 0, 0)), (835, 20))
+
+def print_gameover(screen, player, nb_joueur):
+    go_img = pygame.image.load("images/game_over.png").convert_alpha()
+    go = pygame.transform.scale(go_img, (1000, 700))
+    screen.blit(go, (0, 0))
+
+    go_police = pygame.font.SysFont("bold", 60)
+    if (player == -1):
+        screen.blit(go_police.render("Vous avez perdu !", 1, (255, 255, 255)), (200, 40))
+    else:
+        if (nb_joueur != 1):
+            screen.blit(go_police.render(f"Le joueur {player + 1} a gagné !", 1, (255, 255, 255)), (200, 40))
+        else:
+            screen.blit(go_police.render("Vous avez gagné !", 1, (255, 255, 255)), (200, 40))
+
+    screen.blit(go_police.render(f"Appuyer sur une touche pour continuer", 1, (255, 255, 255)), (100, 100))
+    pygame.display.flip()
+
+    timer = pygame.time.Clock()
+    waiting = True
+    while waiting:
+        timer.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                waiting = False

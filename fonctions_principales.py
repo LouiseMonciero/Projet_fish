@@ -198,7 +198,7 @@ def start_the_game():
 
         if munition == None and projectile != None:
             projectile.draw_fish(screen)
-            if ((y < 600) or depasse_sol == False) and (y > 0) and (x>-200) and (x<1200):
+            if ((y < 600) or depasse_sol == False) and (y > 0) and (x>-50) and (x<1200):
                 x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
                 #print("x =", x)
                 projectile.attribute_pos(x, y)

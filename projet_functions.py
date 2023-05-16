@@ -8,6 +8,7 @@ class fish:
 
     def __init__(self, nom, img, x, y, scale, vitesse):
         self.nom = nom
+        self.speed = vitesse
         if self.nom == "sardine":
             self.poids = randint(100, 200)
             self.effects = []
@@ -26,11 +27,12 @@ class fish:
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
         self.e_cinetique = 0.5 * self.poids * (vitesse ** 2)
-        # print("Mon poisson a les coordonées (topleft): ", self.top_left)
+    
 
-    def modify_scale_and_weight(self, scale_multiplier, weight_multiplier): # méthode permettant d'appliquer une multiplicateur à la taille ( multi < 1) et au poid (multi > 1) d'un poisson
+    def modify_scale_and_weight(self, scale_multiplier, weight_multiplier): # méthode permettant d'appliquer une multiplicateur à la taille et au poid d'un poisson
         self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*scale_multiplier), int(self.image.get_height()*scale_multiplier)))
-        self.poids*=weight_multiplier
+        self.poids /= weight_multiplier
+        #self.speed *= speed_multiplier
 
     def get_name_poisson(self): # méthode permettant de récupérer le nom d'un poisson
         return self.nom
@@ -119,8 +121,10 @@ class bouton:
             self.rect.topleft = (pos[0] - self.center_clicked[0], pos[1] - self.center_clicked[1])
             # print(pos[0] - self.center_clicked[0])
         if self.clicked == False and self.maint == True:
-            vitesse = (sqrt((100 - pos[0]) ** 2 + (500 - pos[
-                1]) ** 2)) / 5.5  # distance par rapport à (100, 500)    est ce que je fais par rapport à pos, ou tect.topleft.
+            vitesse = (sqrt((100 - pos[0]) ** 2 + (500 - pos[1]) ** 2)) / 5.5  # distance par rapport à (100, 500)    est ce que je fais par rapport à pos, ou tect.topleft.
+            #limite la vitesse, permet de définir une Vmax
+            if vitesse > 40:
+                vitesse = 35
             angle = atan2(-(500 - pos[1]), (100 - pos[0]))
             # self.rect.topleft = (pos[0] - self.center_clicked[0]+100, pos[1] - self.center_clicked[1]+500)
             return vitesse, angle

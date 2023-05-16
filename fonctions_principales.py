@@ -12,10 +12,10 @@ para_jeu = [(7, float('inf'), 20, 30), (5, 20, 15, 35), (3, 10, 10, 50)]  # (nb_
 
 def start_the_game():
     global para_jeu
-    # MON ECRAN
+    # SCREEN
     screen = pygame.display.set_mode((1000, 700))  # largeur hauteur
 
-    # MES IMAGES
+    # IMAGES
     mer_img = pygame.image.load("images/mer.png").convert_alpha()
     sable_img = pygame.image.load("images/sable.png").convert_alpha()
     depart_gd = pygame.image.load("images/lance_pierre.png").convert_alpha()
@@ -120,9 +120,8 @@ def start_the_game():
         # vérification si la touche "e" a été appuyée
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_e and projectile is not None and projectile.get_name_poisson() == "globe" and nb_grossissement > 0: # vérifie si le projectile en cours d'utilisation est "globe" et si la touche "e" est appuyée
                 nb_grossissement -= 1 # enlève un grossissement à "globe", est réinitialisé à une valeur donnée à chaque fois que "globe" est sélectionné
-                projectile.modify_scale_and_weight(2,0.25) # augmente la taille de "globe" par 2 et son poid par 4
-            elif projectile is not None and projectile.get_name_poisson() == "globe":
-                print(f"Ec du globe:{projectile.get_e_cinetique()}")
+                projectile.modify_scale_and_weight(2,4) # augmente la taille de "globe" par 2 et diminue son poid par 4
+
 
         # -------------place les surfaces
         screen.blit(sable, (0, 600))  # coin supp gauche
@@ -198,7 +197,7 @@ def start_the_game():
 
         if munition == None and projectile != None:
             projectile.draw_fish(screen)
-            if ((y < 600) or depasse_sol == False) and (y > 0) and (x>-50) and (x<1200):
+            if ((y < 600) or depasse_sol == False) and (y > 0) and (x>-500) and (x<1200):
                 x, y, temps_ecoule = calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite)
                 #print("x =", x)
                 projectile.attribute_pos(x, y)

@@ -109,7 +109,6 @@ def start_the_game():
     police_joueur = pygame.font.SysFont("bold", 40)
     image_joueur = police_joueur.render("Au tour du joueur ", 1, (0, 0, 0))
 
-
     while game_on:
         screen.blit(mer, (0, 0))
         # ------------quitter le jeu

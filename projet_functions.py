@@ -232,7 +232,9 @@ def generate_piece(n, area, image):
 
 
 def draw_pieces(screen, t, projectile, n_score):
-    # cette fonction ne peut pas etre integrer dans la classe pices en raison de la boucle
+    applause_sound = pygame.mixer.Sound('sounds/applause10.wav')
+    # cette fonction ne peut pas etre integrée dans la cl
+    # asse pieces en raison de la boucle
     """tab[ pieces ] -> tab[ pieces ]
     blit les pieces sur l'écran, vérifie si le joueur ne ramasse pas une pièce """
     t_new = []
@@ -241,6 +243,7 @@ def draw_pieces(screen, t, projectile, n_score):
         if projectile != None:
             # print('poisson :', projectile.get_rect(), 'piece', i + 1, ':', t[i].get_rect())
             if pygame.Rect.colliderect(t[i].get_rect(), projectile.get_rect()):
+                applause_sound.play()
                 #print("Le poisson doit recuperer la piece n°", i + 1)
                 n_score += 1
             else:
@@ -296,6 +299,7 @@ def create_mat_initial(nb_bloc, chance_or):
 
 
 def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueur, nb_joueur, diff):  # (x1 , x2 , y1 , y2)
+    punch_sound = pygame.mixer.Sound('sounds/PUNCH.wav')
     """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
     for i in range(11):
         for j in range(7):
@@ -308,6 +312,7 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                 if (projectile != None):
                     #print("Le poisson est detecté par draw mat, e cin : ", projectile.get_e_cinetique())
                     if pygame.Rect.colliderect(M_bloc[i][j].get_rect(), projectile.get_rect()):
+                        punch_sound.play()
                         casse = 0
                         if (projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique()) <= 0:  # si le bloc a plus d'energie que le poisson
                             M_bloc[i][j].modify_e_cinetique(M_bloc[i][j].get_e_cinetique() - projectile.get_e_cinetique())
@@ -322,7 +327,6 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                                 a_joueur = 0
                             else:
                                 a_joueur = a_joueur + 1
-
                         else:
                             projectile.modify_e_cinetique(projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique())
                             casse = 1

@@ -317,8 +317,6 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                             projectile = None
                             if old_score != score:  # le poisson a touché quelque chose
                                 old_score = score
-                            print(f"BOUM {score}")
-                            print(f"BAM {old_score}")
                             if (diff != 0):
                                 n_tir -= 1
                             else :

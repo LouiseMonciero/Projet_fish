@@ -138,17 +138,10 @@ def start_the_game():
 
         screen.blit(image_score, (200, 20))
 
-        winner_is = -1 # personne ne gagne
-        current_player = 0
-        while (current_player < nb_joueur and winner_is == -1) :
-            if (score[current_player] >= 20) :
-                winner_is = current_player
-            current_player += 1
-
-        if (winner_is == -1 and n_tir[a_joueur] > 0):
+        if (n_tir[a_joueur] > 0 and (len(tab_pieces[a_joueur]) + matrice_nb_bloc(Mat_bloc_j[a_joueur])) > 0):
             print_score(screen, nb_joueur, score, police)
         else:
-            print_gameover(screen, winner_is, nb_joueur)
+            print_gameover(screen, nb_joueur, score)
             game_on = False
 
 
@@ -157,7 +150,7 @@ def start_the_game():
         tab_pieces[a_joueur], score[a_joueur] = draw_pieces(screen, tab_pieces[a_joueur], projectile, score[a_joueur])
 
         # ------------place les blocs
-        Mat_bloc_j[a_joueur] , projectile , score[a_joueur] , n_tir[a_joueur], a_joueur = draw_mat(screen, Mat_bloc_j[a_joueur], projectile, brique_casse_img ,score[a_joueur], n_tir[a_joueur], a_joueur, nb_joueur, diff)  # (x1 , x2 , y1 , y2 )
+        Mat_bloc_j[a_joueur], projectile , score[a_joueur] , n_tir[a_joueur], a_joueur = draw_mat(screen, Mat_bloc_j[a_joueur], projectile, brique_casse_img ,score[a_joueur], n_tir[a_joueur], a_joueur, nb_joueur, diff)  # (x1 , x2 , y1 , y2 )
 
 
 

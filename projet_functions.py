@@ -373,6 +373,14 @@ def test():
 # pos = pygame.mouse.get_pos()
 # .collidepoint(pos)
 
+def matrice_nb_bloc(mat):
+    nb_bloc = 0
+    for i in range(8):
+        for j in range(7):
+            if mat[i][j] != None:
+                nb_bloc += 1
+    return nb_bloc
+
 def print_score(screen, nb_joueur, score, police):
     if (nb_joueur == 1):  # si il n'y a que un joueur n'affiche pas score joueur 1 : mais juste le score
         screen.blit(police.render(str(score[0]), 1, (0, 0, 0)), (260, 20))
@@ -392,17 +400,26 @@ def print_score(screen, nb_joueur, score, police):
         screen.blit(police.render("joueur 5 :", 1, (0, 0, 0)), (770, 20))
         screen.blit(police.render(str(score[4]), 1, (0, 0, 0)), (835, 20))
 
-def print_gameover(screen, player, nb_joueur):
+def print_gameover(screen, nb_joueur, score):
     go_img = pygame.image.load("images/game_over.png").convert_alpha()
     go = pygame.transform.scale(go_img, (1000, 700))
     screen.blit(go, (0, 0))
 
+    winner_is = -1  # personne ne gagne si tous les scores sont à zero
+    max_score = 0
+    current_player = 0
+    while (current_player < nb_joueur):
+        if (score[current_player] > max_score):
+            winner_is = current_player
+            max_score = score[current_player]
+        current_player += 1
+
     go_police = pygame.font.SysFont("bold", 60)
-    if (player == -1):
+    if (winner_is == -1):
         screen.blit(go_police.render("Vous avez perdu !", 1, (255, 255, 255)), (200, 40))
     else:
         if (nb_joueur != 1):
-            screen.blit(go_police.render(f"Le joueur {player + 1} a gagné !", 1, (255, 255, 255)), (200, 40))
+            screen.blit(go_police.render(f"Le joueur {winner_is + 1} a gagné !", 1, (255, 255, 255)), (200, 40))
         else:
             screen.blit(go_police.render("Vous avez gagné !", 1, (255, 255, 255)), (200, 40))
 

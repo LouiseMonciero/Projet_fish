@@ -138,7 +138,7 @@ def start_the_game():
 
         screen.blit(image_score, (200, 20))
 
-        if (n_tir[a_joueur] > 0 and (len(tab_pieces[a_joueur]) + matrice_nb_bloc(Mat_bloc_j[a_joueur])) > 0):
+        if (((diff != 0 and n_tir[a_joueur] > 0) or diff == 0) and (len(tab_pieces[a_joueur]) + matrice_nb_bloc(Mat_bloc_j[a_joueur])) > 0):
             print_score(screen, nb_joueur, score, police)
         else:
             print_gameover(screen, nb_joueur, score)

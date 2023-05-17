@@ -415,6 +415,7 @@ def print_gameover(screen, nb_joueur, score):
         current_player += 1
 
     go_police = pygame.font.SysFont("bold", 60)
+    go_police_small = pygame.font.SysFont("bold", 30)
     if (winner_is == -1):
         screen.blit(go_police.render("Vous avez perdu !", 1, (255, 255, 255)), (200, 40))
     else:
@@ -423,7 +424,12 @@ def print_gameover(screen, nb_joueur, score):
         else:
             screen.blit(go_police.render("Vous avez gagné !", 1, (255, 255, 255)), (200, 40))
 
-    screen.blit(go_police.render(f"Appuyer sur une touche pour continuer", 1, (255, 255, 255)), (100, 100))
+    current_player = 0
+    while (current_player < nb_joueur):
+        screen.blit(go_police_small.render(f"Joueur {current_player + 1} : {score[current_player]} points", 1, (255, 255, 255)), (200, 100 + current_player*30))
+        current_player += 1
+
+    screen.blit(go_police.render(f"Appuyer sur une touche pour continuer", 1, (255, 255, 255)), (100, 600))
     pygame.display.flip()
 
     timer = pygame.time.Clock()

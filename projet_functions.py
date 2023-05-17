@@ -300,6 +300,7 @@ def create_mat_initial(nb_bloc, chance_or):
 
 def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueur, nb_joueur, diff):  # (x1 , x2 , y1 , y2)
     punch_sound = pygame.mixer.Sound('sounds/PUNCH.wav')
+    old_score = score
     """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
     for i in range(11):
         for j in range(7):
@@ -339,6 +340,7 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                                 #print(" le bloc cassé est d'or")
                                 score += 5
                             M_bloc[i][j] = None
+
     return M_bloc, projectile, score, n_tir, a_joueur
 
 

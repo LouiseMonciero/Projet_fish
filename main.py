@@ -5,6 +5,10 @@ from projet_functions import *
 from fonctions_principales import *
 print("\nHello from the creators of the game, thanks to play with us !\n")
 pygame.init()
+
+music = pygame.mixer.music.load('sounds/mixkit-diving-sea-ambience-1205.wav')
+pygame.mixer.music.play(-1)
+
 #MON ECRAN
 screen = pygame.display.set_mode((1000, 700))   # largeur hauteur
 menu = pygame_menu.Menu('AngryFish', 1000, 700, theme=pygame_menu.themes.THEME_BLUE)

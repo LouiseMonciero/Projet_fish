@@ -231,8 +231,7 @@ def generate_piece(n, area, image):
     return t
 
 
-def draw_pieces(screen, t, projectile, n_score):
-    applause_sound = pygame.mixer.Sound('sounds/applause10.wav')
+def draw_pieces(screen, t, projectile, n_score, applause_sound):
     # cette fonction ne peut pas etre integrée dans la cl
     # asse pieces en raison de la boucle
     """tab[ pieces ] -> tab[ pieces ]
@@ -298,9 +297,7 @@ def create_mat_initial(nb_bloc, chance_or):
     return M
 
 
-def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueur, nb_joueur, diff):  # (x1 , x2 , y1 , y2)
-    punch_sound = pygame.mixer.Sound('sounds/PUNCH.wav')
-    old_score = score
+def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueur, nb_joueur, diff, punch_sound, old_score):  # (x1 , x2 , y1 , y2)
     """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
     for i in range(11):
         for j in range(7):
@@ -318,6 +315,8 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                         if (projectile.get_e_cinetique() - M_bloc[i][j].get_e_cinetique()) <= 0:  # si le bloc a plus d'energie que le poisson
                             M_bloc[i][j].modify_e_cinetique(M_bloc[i][j].get_e_cinetique() - projectile.get_e_cinetique())
                             projectile = None
+                            if old_score != score:  # le poisson a touché quelque chose
+                                old_score = score
                             if (diff != 0):
                                 n_tir -= 1
                             else :
@@ -341,7 +340,7 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                                 score += 5
                             M_bloc[i][j] = None
 
-    return M_bloc, projectile, score, n_tir, a_joueur
+    return M_bloc, projectile, score, n_tir, a_joueur, old_score
 
 
 def create_mat_bloc(img_bloc, img_bloc_or, M):

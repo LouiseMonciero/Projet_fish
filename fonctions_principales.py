@@ -80,8 +80,6 @@ def start_the_game():
     gravite = 0.7
     e_cinetique = 0
 
-
-
     # MES TEXTES
     police = pygame.font.SysFont("bold", 20)  # prend en parametre le police d'écriture et la taille.
     image_score = police.render("SCORE :", 1, (0, 0, 0))  # (0,0,0) est le code RGB.
@@ -108,6 +106,12 @@ def start_the_game():
 
     police_joueur = pygame.font.SysFont("bold", 40)
     image_joueur = police_joueur.render("Au tour du joueur ", 1, (0, 0, 0))
+
+    punch_sound = pygame.mixer.Sound('sounds/PUNCH.wav')
+    applause_sound = pygame.mixer.Sound('sounds/applause10.wav')
+    missed_sound = pygame.mixer.Sound('sounds/missed.wav')
+
+    old_score = [0] * nb_joueur
 
     while game_on:
         screen.blit(mer, (0, 0))
@@ -143,13 +147,12 @@ def start_the_game():
             print_gameover(screen, nb_joueur, score)
             game_on = False
 
-
         # ------------place les pièces
 
-        tab_pieces[a_joueur], score[a_joueur] = draw_pieces(screen, tab_pieces[a_joueur], projectile, score[a_joueur])
+        tab_pieces[a_joueur], score[a_joueur] = draw_pieces(screen, tab_pieces[a_joueur], projectile, score[a_joueur], applause_sound)
 
         # ------------place les blocs
-        Mat_bloc_j[a_joueur], projectile , score[a_joueur] , n_tir[a_joueur], a_joueur = draw_mat(screen, Mat_bloc_j[a_joueur], projectile, brique_casse_img ,score[a_joueur], n_tir[a_joueur], a_joueur, nb_joueur, diff)  # (x1 , x2 , y1 , y2 )
+        Mat_bloc_j[a_joueur], projectile , score[a_joueur] , n_tir[a_joueur], a_joueur, old_score[a_joueur] = draw_mat(screen, Mat_bloc_j[a_joueur], projectile, brique_casse_img ,score[a_joueur], n_tir[a_joueur], a_joueur, nb_joueur, diff, punch_sound, old_score[a_joueur])  # (x1 , x2 , y1 , y2 )
 
 
 
@@ -208,6 +211,10 @@ def start_the_game():
                 projectile.attribute_pos(x, y)
             else:
                 projectile = None                    # disparition du poisson !!!!!!!
+                if old_score[a_joueur] == score[a_joueur]:               # le poisson n'a rien touché
+                    missed_sound.play()
+                else:
+                    old_score[a_joueur] = score[a_joueur]
                 if diff != 0:
                     n_tir[a_joueur] -= 1
                     if (a_joueur == nb_joueur - 1):

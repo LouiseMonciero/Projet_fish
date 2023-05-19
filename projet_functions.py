@@ -291,23 +291,19 @@ def create_mat_initial(nb_bloc, chance_or):
     1: Un bloc à cet emplacement
     2: Une brique d'or à cet emplaement"""
 
-    M = [[0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    M = [[0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 0, 0]]
     # M= [[0]*6]   -> La modification d'un case se repercute sur toute la colonne.
     cpt_bloc = 0
     c_or = 0
     L_indice = []
-    for i in range(11):
-        for j in range(7):
+    for i in range(7):
+        for j in range(8):
             L_indice.append((i, j))
     while (cpt_bloc < nb_bloc):
         case = choice(L_indice)
@@ -322,9 +318,9 @@ def create_mat_initial(nb_bloc, chance_or):
 
 
 def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueur, nb_joueur, diff, punch_sound, old_score):  # (x1 , x2 , y1 , y2)
-    """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyé sera différente."""
-    for i in range(11):
-        for j in range(7):
+    """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyée sera différente."""
+    for i in range(7):
+        for j in range(8):
             if M_bloc[i][j] != None:
                 # print("Object")
                 screen.blit(M_bloc[i][j].get_img(),
@@ -369,21 +365,17 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
 
 def create_mat_bloc(img_bloc, img_bloc_or, M):
 
-    M_bloc = [[None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None],
-              [None, None, None, None, None, None, None, None, None]]
-    for i in range(11):
-        for j in range(7):
-            x = 600 + i * 50
-            y = 200 + j * 50
+    M_bloc = [[None, None, None, None, None, None, None, None],
+              [None, None, None, None, None, None, None, None],
+              [None, None, None, None, None, None, None, None],
+              [None, None, None, None, None, None, None, None],
+              [None, None, None, None, None, None, None, None],
+              [None, None, None, None, None, None, None, None],
+              [None, None, None, None, None, None, None, None]]
+    for i in range(7):
+        y = 250 + i * 50
+        for j in range(8):
+            x = 600 + j * 50
             if M[i][j] == 1:
                 M_bloc[i][j] = bloc(x, y, img_bloc, 1)  # energie cinetique basse.
                 # print( M_bloc[i][j].get_x())
@@ -404,8 +396,8 @@ def test():
 
 def matrice_nb_bloc(mat):
     nb_bloc = 0
-    for i in range(8):
-        for j in range(7):
+    for i in range(7):
+        for j in range(8):
             if mat[i][j] != None:
                 nb_bloc += 1
     return nb_bloc

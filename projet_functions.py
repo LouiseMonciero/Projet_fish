@@ -4,9 +4,10 @@ import pygame
 
  # ----------------------- CLASSES ----------------------- #
 class fish:
-    """ensemble des munition"""
 
     def __init__(self, nom, img, x, y, scale, vitesse):
+        """Constructeur de la classe fish
+        str , image, int, int, int, int --> fish"""
         self.nom = nom
         self.speed = vitesse
         if self.nom == "sardine":
@@ -29,55 +30,73 @@ class fish:
         self.e_cinetique = 0.5 * self.poids * (vitesse ** 2)
     
 
-    def modify_scale_and_weight(self, scale_multiplier, weight_multiplier): # méthode permettant d'appliquer une multiplicateur à la taille et au poid d'un poisson
+    def modify_scale_and_weight(self, scale_multiplier, weight_multiplier):
+        """Méthode permettant d'appliquer un multiplicateur à la taille et au poids d'un poisson
+        fish, int, int --> None"""
         self.image = pygame.transform.scale(self.image, (int(self.image.get_width()*scale_multiplier), int(self.image.get_height()*scale_multiplier)))
         self.poids /= weight_multiplier
         #self.speed *= speed_multiplier
 
-    def get_name_poisson(self): # méthode permettant de récupérer le nom d'un poisson
+    def get_name_poisson(self):
+        """Méthode permettant de récupérer le nom d'un poisson
+        fish --> str"""
         return self.nom
     def draw_fish(self, screen):
+        """Méthode permettant d'afficher un poisson sur un écran
+        fish, screen --> None"""
         screen.blit(self.image, self.top_left)
 
     # si la sole cole, il ne reste que explosion comme effect
     def get_state(self):
-        """permet de connaitre l'état du poisson"""
+        """Méthode permettant de connaitre l'état d'un poisson
+        fish --> str"""
         return self.effects
 
     def get_weight(self):
-        """permet de connaitre son poids"""
+        """Méthode permettant de connaitre son poids
+        fish --> int"""
         return self.poids
 
     def attribute_pos(self, x, y):
-        """permet d'attribuer une nouvelle position au poisson"""
+        """Méthode permettant d'attribuer une nouvelle position au poisson
+        fish, int, int --> None"""
         self.rect = self.image.get_rect()
         self.top_left = (x, y)
         self.rect[0] = self.rect[0] + self.top_left[0]
         self.rect[1] = self.rect[1] + self.top_left[1]
 
     def get_x(self):
+        """Méthode permettant de connaitre l'abcisse de la position d'un poisson
+        fish --> int"""
         return self.top_left[0]
 
     def get_y(self):
+        """Méthode permettant de connaitre l'ordonnée de la position d'un poisson
+        fish --> int"""
         return self.top_left[1]
 
     def get_rect(self):
-        "utiliser pour colliderect() in functions draw_pieces"
+        """Méthode permettant de connaitre le rectangle associé à l'image associé à un poisson
+        fish --> rect"""
+        #Rect est un objet du module pygame
         t = self.rect
         return t
 
     def get_e_cinetique(self):
+        """Méthode permettant de connaitre l'énergie cinétique d'un poisson
+        fish --> int"""
         return self.e_cinetique
 
     def modify_e_cinetique(self, new_ec):
+        """Méthode permettant de connaitre l'énergie cinétique d'un poisson
+        fish --> int"""
         self.e_cinetique = new_ec
 
 class bouton:
-    # creer des bouttons à partir des images. Comme on en aura plusieurs,
-    # https://www.youtube.com/watch?v=G8MYGDf_9ho
-    """difference entre .image et .__image ???"""
+    # créer des boutons à partir des images. Comme on aura besoin de plusieurs types de boutons, plusieurs type de boutons sont implémentés dans cette classe
 
     def __init__(self, x, y, img, scale, name):
+        """Constructeur de la classe bouton"""
         longueur = img.get_width()
         largeur = img.get_height()
         self.image = pygame.transform.scale(img, (int(longueur * scale), int(largeur * scale)))
@@ -89,6 +108,8 @@ class bouton:
         self.center_clicked = (0, 0)  # la ou l'utilisateur aura clique sur le bouton
 
     def draw(self, screen):
+        """Méthode permettant à la fois de dessiner un bouton sur l'écran et de tester si le bouton est cliqué par l'utilisateur
+        bouton, screen --> BOOL"""
         screen.blit(self.image, self.rect.topleft)
         action = False
         pos = pygame.mouse.get_pos()
@@ -104,8 +125,11 @@ class bouton:
         return action
 
     def draw_maintain(self, screen, area):
-        # area est la variable (x1,x2, y1, y2) indiquant la zone dans laquelle peut se deplacer le bouton.
-        ''' zone de lancer --> vitesse, angle'''
+        """Méthode permettant à la fois de dessiner un bouton sur l'écran et de tester si le bouton est cliqué par l'utilisateur
+        Ce bouton est déplaçable dans area par l'utilisateur tant que le bouton est pressé.
+        Une fois le bouton est relaché, des paramètres (vitesse et angle de tir) sont calculés puis renvoyés
+        bouton, screen, area --> int, int"""
+        # area est la variable (x1,x2, y1, y2) indiquant la zone dans laquelle peut se déplacer le bouton.
         screen.blit(self.image, self.rect.topleft)
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
@@ -313,13 +337,13 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                             projectile = None
                             if old_score != score:  # le poisson a touché quelque chose
                                 old_score = score
-                            if (diff != 0):
+                            if (diff != 0): # lorsque le poisson disparait le nombre de coup diminue sauf en facile où il va augmenté
                                 n_tir -= 1
                             else :
                                 n_tir += 1
                             if M_bloc[i][j].get_type() == 1:
                                 M_bloc[i][j].modify_img(image_bloc_casse)
-                            if (a_joueur == nb_joueur - 1):
+                            if (a_joueur == nb_joueur - 1): # quand le poisson disparait le tour change, la variable qui contiens l'indice du joueur qui doit jouer prend dans le tableau le suivant et s'l arrive a la fin, il reprend le premier joueur
                                 a_joueur = 0
                             else:
                                 a_joueur = a_joueur + 1
@@ -379,6 +403,7 @@ def matrice_nb_bloc(mat):
     return nb_bloc
 
 def print_score(screen, nb_joueur, score, police):
+    " affiche les scorse de tout les joueurs"
     if (nb_joueur == 1):  # si il n'y a que un joueur n'affiche pas score joueur 1 : mais juste le score
         screen.blit(police.render(str(score[0]), 1, (0, 0, 0)), (260, 20))
     else:

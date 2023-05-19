@@ -52,7 +52,6 @@ def start_the_game():
     # button_lancer = bouton(10, 525, button_img, 0.1, '')
 
     # VARIABLES
-    a_joueur = 0
     projectile = None  # quand le poisson est en l'air
     munition = None  # quand le poisson est sur la zone de départ
     para_lancer = None  # (vitesse , angle )
@@ -87,22 +86,23 @@ def start_the_game():
 
     # MES PIECES
     nb_pieces = para_jeu[diff][0]
-    tab_pieces = [0]*nb_joueur
+    tab_pieces = [0]*nb_joueur # créé un tableau de la taille du nb_joueur pour avoir pour chaque joueur les pièces correspondante
     M_piece = generate_piece(nb_pieces, (100, 1000, 0, 500), piece_img)
     for i in range (len(tab_pieces)):
-        tab_pieces[i] = M_piece
+        tab_pieces[i] = M_piece # initialise pour chaque joueur les meme pièces au debut
 
     # MES BLOCS
     M = create_mat_initial(para_jeu[diff][3], para_jeu[diff][2]) # nb_bloc, chance_or
-    Mat_bloc_j = [0]*nb_joueur
+    Mat_bloc_j = [0]*nb_joueur # créé un tableau de la taille du nb_joueur pour avoir pour chaque joueur la matrice des blocs
     for i in range (len(Mat_bloc_j)):
-        Mat_bloc_j[i] = create_mat_bloc(brique_img, bloc_or_img, M)
+        Mat_bloc_j[i] = create_mat_bloc(brique_img, bloc_or_img, M) # initialise pour chaque joueur la meme matrice de bloc au début
 
 
     # MES JOUEURS
-    Mes_joueurs = [0] * nb_joueur  # initialisation d'un tableau contenant les numeros des joueurs
+    Mes_joueurs = [0] * nb_joueur  # initialisation d'un tableau contenant les indices des joueurs
     for i in range(len(Mes_joueurs)):
         Mes_joueurs[i] = i
+    a_joueur = 0 #initialisation de l'indice du joueur a qui est le tour
 
     police_joueur = pygame.font.SysFont("bold", 40)
     image_joueur = police_joueur.render("Au tour du joueur ", 1, (0, 0, 0))
@@ -135,7 +135,7 @@ def start_the_game():
         screen.blit(image_n_tir, (40, 20))
         screen.blit(police.render(str(n_tir[a_joueur]), 1, (0, 0, 0)), (160, 20))
 
-        if (nb_joueur != 1) :
+        if (nb_joueur != 1) : #si plus de 1 joueur affiche a quel joueur est le tour
             screen.blit(image_joueur, (40, 635))
             screen.blit(police_joueur.render(str(a_joueur + 1), 1, (0, 0, 0)), (290, 635))
 
@@ -215,7 +215,7 @@ def start_the_game():
                     missed_sound.play()
                 else:
                     old_score[a_joueur] = score[a_joueur]
-                if diff != 0:
+                if diff != 0: #si le poisson est sorti de l'ecran le nombre de tire diminue et ca passe au joueur suivant sauf si en facile ou le coup n'est pas comptabilisé
                     n_tir[a_joueur] -= 1
                     if (a_joueur == nb_joueur - 1):
                         a_joueur = 0
@@ -234,28 +234,36 @@ def start_the_game():
 # ----------------------- RULES ----------------------- #
 def regle_jeu():  # fct pour la partie regle dans le menu
     screen = pygame.display.set_mode((1000, 700))
-    fond_regle = pygame.image.load("images/fond_regle_temporaire.jpg").convert_alpha()
-    bombe = pygame.image.load("images/bombe.png").convert_alpha()
+    fond_regle = pygame.image.load("images/mer.png").convert_alpha()
+    globe = pygame.image.load("images/globe.png").convert_alpha()
     piece = pygame.image.load("images/piece.png").convert_alpha()
     retour = pygame.image.load("images/retour.png").convert_alpha()
+    poisson = pygame.image.load("images/saumon.png").convert_alpha()
+    brique = pygame.image.load("images/brique.png").convert_alpha()
+    bloc_or = pygame.image.load("images/bloc_or.png").convert_alpha()
     fond_regle = pygame.transform.scale(fond_regle, (1000, 700))
-    bombe = pygame.transform.scale(bombe, (50, 50))
-    piece = pygame.transform.scale(piece, (50, 50))
-    bout_retour = bouton(20, 10, retour, 0.04, 'bouton_retour_regle')
+    globe = pygame.transform.scale(globe, (50, 50))
+    piece = pygame.transform.scale(piece, (35, 35))
+    poisson = pygame.transform.scale(poisson, (50, 50))
+    brique = pygame.transform.scale(brique, (35, 35))
+    bloc_or = pygame.transform.scale(bloc_or, (35, 35))
+
+    bout_retour = bouton(20, 10, retour, 0.04, 'image/bouton_retour_regle')
     # création des text
     police_text = pygame.font.SysFont("arial", 30)
     police_titre = pygame.font.SysFont("arial", 35)  # prend en parametre le police d'écriture et la taille.
     text_but = police_titre.render("But du jeu :", 1, (0, 0, 0))
     text_jeu = police_titre.render("Règle jeu :", 1, (0, 0, 0))
-    text_regle_but = police_text.render(" Casser toute les caisses", 1, (0, 0, 0))
-    text_regle_jeu = police_text.render(" Selectionner un poisson adapter la force et l'angle du tire", 1, (0, 0, 0))
-    text_regle_jeu_bis = police_text.render(" puis appuyer sur le bouton pour tirer et casser les caisses. ", 1,
-                                            (0, 0, 0))
-    text_objet_speciale = police_titre.render("Objet spéciale : ", 1, (0, 0, 0))
-    text_objet_piece = police_text.render(": pièce : raporte des points bonus ", 1, (0, 0, 0))
+    text_regle_but = police_text.render(" Collecter le plus de point", 1, (0, 0, 0))
+    text_regle_jeu = police_text.render(" Selectionner un poisson adapter la force et l'angle du tire avec la souris", 1, (0, 0, 0))
+    text_regle_jeu_bis = police_text.render(" puis relacher pour lancer le poisson et casser les caisses. ", 1,(0, 0, 0))
+    text_objet_speciale = police_titre.render("Objet : ", 1, (0, 0, 0))
+    text_objet_brique = police_text.render(": brique : rapporte des points quand elle sont détruites ", 1, (0, 0, 0))
+    text_objet_brique_or = police_text.render(": brique d'or : rapporte plus de point que les briques mais sont plus solide ", 1, (0, 0, 0))
+    text_objet_piece = police_text.render(": pièce : rapporte des points bonus ", 1, (0, 0, 0))
     text_capacite = police_titre.render("Capacité des poissons :", 1, (0, 0, 0))
-    text_capacite_bombe = police_text.render("- poisson bombe : explose à son arriver ", 1, (0, 0, 0))
-    text_capacite_etc = police_text.render("- poisson...", 1, (0, 0, 0))
+    text_capacite_bombe = police_text.render("- poisson globe : grossie en appuyant sur E ", 1, (0, 0, 0))
+    text_capacite_poisson = police_text.render("- poisson : pas de capcité spéciale", 1, (0, 0, 0))
     timer = pygame.time.Clock()
     regle = True
 
@@ -263,17 +271,23 @@ def regle_jeu():  # fct pour la partie regle dans le menu
         screen.blit(fond_regle, (0, 0))  # affichage du fond
         # affichage des texts et des images associer
         screen.blit(text_but, (75, 50))
-        screen.blit(text_regle_but, (125, 100))
-        screen.blit(text_jeu, (75, 175))
-        screen.blit(text_regle_jeu, (125, 225))
-        screen.blit(text_regle_jeu_bis, (125, 275))
-        screen.blit(text_objet_speciale, (75, 350))
-        screen.blit(text_objet_piece, (100, 400))
-        screen.blit(piece, (35, 395))  # affichage de l'image correspondant au text
+        screen.blit(text_regle_but, (250, 55))
+        screen.blit(text_jeu, (75, 100))
+        screen.blit(text_regle_jeu, (125, 145))
+        screen.blit(text_regle_jeu_bis, (125, 185))
+        screen.blit(text_objet_speciale, (75, 250))
+        screen.blit(text_objet_brique, (125, 295))
+        screen.blit(brique, (55, 295))
+        screen.blit(text_objet_brique_or, (125, 340))
+        screen.blit(bloc_or, (55, 345))
+        screen.blit(text_objet_piece, (125, 395))
+        screen.blit(piece, (55, 390))  # affichage de l'image correspondant au text
         screen.blit(text_capacite, (75, 475))
-        screen.blit(text_capacite_bombe, (125, 525))
-        screen.blit(bombe, (55, 520))
-        screen.blit(text_capacite_etc, (125, 575))
+        screen.blit(text_capacite_poisson, (125, 525))
+        screen.blit(poisson, (55, 520))
+        screen.blit(text_capacite_bombe, (125, 575))
+        screen.blit(globe, (55, 570))
+
         if bout_retour.draw(screen) == True:  # pour retourner au menu avec le bouton retour
             regle = False
         for event in pygame.event.get():

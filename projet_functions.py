@@ -317,13 +317,13 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
                             projectile = None
                             if old_score != score:  # le poisson a touché quelque chose
                                 old_score = score
-                            if (diff != 0):
+                            if (diff != 0): # lorsque le poisson disparait le nombre de coup diminue sauf en facile où il va augmenté
                                 n_tir -= 1
                             else :
                                 n_tir += 1
                             if M_bloc[i][j].get_type() == 1:
                                 M_bloc[i][j].modify_img(image_bloc_casse)
-                            if (a_joueur == nb_joueur - 1):
+                            if (a_joueur == nb_joueur - 1): # quand le poisson disparait le tour change, la variable qui contiens l'indice du joueur qui doit jouer prend dans le tableau le suivant et s'l arrive a la fin, il reprend le premier joueur
                                 a_joueur = 0
                             else:
                                 a_joueur = a_joueur + 1
@@ -387,6 +387,7 @@ def matrice_nb_bloc(mat):
     return nb_bloc
 
 def print_score(screen, nb_joueur, score, police):
+    " affiche les scorse de tout les joueurs"
     if (nb_joueur == 1):  # si il n'y a que un joueur n'affiche pas score joueur 1 : mais juste le score
         screen.blit(police.render(str(score[0]), 1, (0, 0, 0)), (260, 20))
     else:

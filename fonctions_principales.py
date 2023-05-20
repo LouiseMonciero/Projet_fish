@@ -124,8 +124,7 @@ def start_the_game():
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_e and projectile is not None and projectile.get_name_poisson() == "globe" and nb_grossissement > 0: # vérifie si le projectile en cours d'utilisation est "globe" et si la touche "e" est appuyée
                 nb_grossissement -= 1 # enlève un grossissement à "globe", est réinitialisé à une valeur donnée à chaque fois que "globe" est sélectionné
                 projectile.modify_scale_and_weight(2,0.25) # augmente la taille de "globe" par 2 et son poid par 4
-            elif projectile is not None and projectile.get_name_poisson() == "globe":
-                print(f"Ec du globe:{projectile.get_e_cinetique()}")
+
 
         # -------------place les surfaces
         screen.blit(sable, (0, 600))  # coin supp gauche

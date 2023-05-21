@@ -108,8 +108,10 @@ def start_the_game():
     image_joueur = police_joueur.render("Au tour du joueur ", 1, (0, 0, 0))
 
     punch_sound = pygame.mixer.Sound('sounds/PUNCH.wav')
+    punch_sound.set_volume(0.1)
     applause_sound = pygame.mixer.Sound('sounds/applause10.wav')
     missed_sound = pygame.mixer.Sound('sounds/missed.wav')
+    missed_sound.set_volume(0.1)
 
     old_score = [0] * nb_joueur
 

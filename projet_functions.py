@@ -226,18 +226,28 @@ class bloc:
 
 
 # ----------------------- FONCITONS DIVERSES ----------------------- #
+
+
+#def menu():
+
+
 def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite):
     """Calcul la trajectoire d'un obj à partir de sa vitesse (px/s), de son angle, du temps écoulé depuis le lancer et sa direction initiale sous forme (x,y)
     Renvoie le nouveaux temps ecoule, et la nouvelle trajectoire (x, y).
     On calcul aussi l'energie cinetique du projectile
-    Frottement négligés"""
+    Frottement négligés
+    x_position, y_position, vitesse, temps_ecoule, angle, gravite --> int, int, int, int , int, int"""
     x = x_position + (vitesse * (cos(angle)) * temps_ecoule)
     y = y_position + (vitesse * (-sin(angle)) * temps_ecoule) + (0.5 * gravite * temps_ecoule ** 2)
     temps_ecoule += 0.25
     return x, y, temps_ecoule
 
 
-def reduction_img(scale, image):
+def change_scale_img(scale, image):
+    """Permet de transformer la taille d'une image en applicant un multiplicateur
+    Renvoie l'image avec la nouvelle taille.
+    Prend un int et une image en paramêtre
+    scale, image --> int, image"""
     width = image.get_width
     height = image.get_height()
     image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))

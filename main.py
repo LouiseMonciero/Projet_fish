@@ -14,7 +14,7 @@ pygame.mixer.music.play(-1)
 screen = pygame.display.set_mode((1000, 700))   # largeur hauteur
 menu = pygame_menu.Menu('AngryFish', 1000, 700, theme=pygame_menu.themes.THEME_BLUE)
 
-#menu.add.text_input('Joueur : ', default='pseudo', onchange=save_pseudo)
+#MENU
 menu.add.button('Jouer', start_the_game) # quand on appuie sur Jouer, la boucle de jeu est lancé
 menu.add.selector('Difficulté : ', [('Normal',1),('Difficile', 2), ('Facile', 0)], onchange= set_difficulty)
 menu.add.selector('Joueurs : ', [('1',1),('2',2),('3',3),('4',4),('5',5)], onchange=set_nb_joueurs)

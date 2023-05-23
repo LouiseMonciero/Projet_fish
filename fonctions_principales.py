@@ -32,7 +32,7 @@ def start_the_game():
     brique_casse_img = pygame.image.load("images/brique_casse.png").convert_alpha()
     fumee_img = pygame.image.load("images/fumee.png").convert_alpha()
 
-    mer = pygame.transform.scale(mer_img, (1000, 700))
+    mer = pygame.transform.scale(mer_img, (1000, 614))
     piece_img = pygame.transform.scale(piece_img_gr, (piece_img_gr.get_width() * 0.1, piece_img_gr.get_height() * 0.1))
 
     # MES SURFACES
@@ -46,8 +46,8 @@ def start_the_game():
 
 
     # MES BOUTTONS
-    sardine = bouton(20, 50, sardine_img, 0.2, '')
-    globe = bouton(20, 100, globe_img, 0.1, '')
+    sardine = bouton(20, 50, sardine_img, 0.1, '')
+    globe = bouton(20, 110, globe_img, 0.05, '')
     rouge = bouton(20, 175, rouge_img, 0.1, '')
     # button_lancer = bouton(10, 525, button_img, 0.1, '')
 
@@ -163,13 +163,13 @@ def start_the_game():
             x = 100
             y = 500
             #print('sardine clicked')
-            munition = bouton(100, 500, sardine_img, 0.3, 'sardine')
+            munition = bouton(100, 500, sardine_img, 0.1, 'sardine')
 
         if globe.draw(screen) and projectile == None:
             x = 100
             y = 500
             #print('globe clicked')
-            munition = bouton(100, 500, globe_img, 0.1, 'globe')
+            munition = bouton(100, 500, globe_img, 0.05, 'globe')
             # munition = fish("globe", globe_img, 100, 500, 0.1)
             nb_grossissement = 1  # permet de donner un nombre maximal de grossissement à globe en vérifiant si cette valeur est strictement supérieure à 0
 
@@ -193,10 +193,10 @@ def start_the_game():
             else:
                 depasse_sol = None
             if munition.get_name() == 'sardine':
-                projectile = fish("sardine", sardine_img, x_position, y_position, 0.3 , para_lancer[0])
+                projectile = fish("sardine", sardine_img, x_position, y_position, 0.1 , para_lancer[0])
                 # projectile = fish("sardine", sardine_img, 100, 500, 0.3)
             elif munition.get_name() == 'globe':
-                projectile = fish("globe", globe_img, x_position, y_position, 0.1,  para_lancer[0])
+                projectile = fish("globe", globe_img, x_position, y_position, 0.05,  para_lancer[0])
             elif munition.get_name() == 'rouge':
                 projectile = fish("rouge", rouge_img, x_position, y_position, 0.15,  para_lancer[0])
             vitesse = para_lancer[0]

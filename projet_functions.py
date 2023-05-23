@@ -227,10 +227,6 @@ class bloc:
 
 # ----------------------- FONCITONS DIVERSES ----------------------- #
 
-
-#def menu():
-
-
 def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite):
     """Calcul la trajectoire d'un obj à partir de sa vitesse (px/s), de son angle, du temps écoulé depuis le lancer et sa direction initiale sous forme (x,y)
     Renvoie le nouveaux temps ecoule, et la nouvelle trajectoire (x, y).

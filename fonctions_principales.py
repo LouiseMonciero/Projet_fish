@@ -235,7 +235,7 @@ def start_the_game():
 # ----------------------- RULES ----------------------- #
 def regle_jeu():  # fct pour la partie regle dans le menu
     screen = pygame.display.set_mode((1000, 700))
-    fond_regle = pygame.image.load("images/mer.png").convert_alpha()
+    fond_regle = pygame.image.load("images/mer_regle.png").convert_alpha()
     globe = pygame.image.load("images/globe.png").convert_alpha()
     piece = pygame.image.load("images/piece.png").convert_alpha()
     retour = pygame.image.load("images/retour.png").convert_alpha()

@@ -154,17 +154,24 @@ class bouton:
             return vitesse, angle
 
     def get_x(self):
+        """Méthode permettant de connaitre l'abssice du coin supérieur gauche associé à un bouton
+        bouton --> int"""
         # print("le x en question : ", self.rect.topleft[0])
         return self.rect.topleft[0]
 
     def get_y(self):
+        """Méthode permettant de connaitre l'ordonée du coin supérieur gauche associé à un bouton
+        bouton --> int"""
         return self.rect.topleft[1]
 
     def get_name(self):
+        """Méthode permettant de connaitre le nom d'un bouton
+        bouton --> int"""
         return self.name
 
 class pieces:
     def __init__(self, image, x, y):
+        """Constructeur de la classe pieces"""
         self.img = image
         self.rect = self.img.get_rect()
         self.top_left = (x, y)
@@ -172,13 +179,18 @@ class pieces:
         self.rect[1] = self.rect[1] + self.top_left[1]
 
     def get_img(self):
+        """Méthode permettant de recuperer l'image associé à la piece
+        pieces --> img"""
         return self.img
 
     def get_topleft(self):
+        """Méthode permettant de recuperer le coin superieur gauche de la piece
+        pieces --> tuples (int, int)"""
         return self.top_left
 
     def get_rect(self):
-        "Renvoie le rectangle de la pièce"
+        """Renvoie le rectangle de la pièce
+        piece --> rect"""
         # utiliser pour colliderect() in functions draw_pieces
         # self.rect renvoi un tableau (x1 , y1, largeur , hauteur )
         t = self.rect
@@ -186,6 +198,7 @@ class pieces:
 
 class bloc:
     def __init__(self, x, y, img, type):
+        """Constructeur de la classe bloc"""
         self.image = img
         if type == 1:
             self.type = type  # 1 (bloc) ou 2(bloc d'or)
@@ -199,29 +212,43 @@ class bloc:
         self.rect.topleft = (x, y)
 
     def get_img(self):
+        """Méthode permettant de recuperer l'image associé au bloc
+        bloc --> img"""
         return self.image
 
     def modify_img(self, new_img):
+        """Méthode permettant de modifier l'image associé au bloc
+        bloc --> img"""
         self.image = new_img
 
     def get_x(self):
+        """Méthode permettant de connaitre l'abssice du coin supérieur gauche associé au bloc
+        bloc --> int"""
         return self.x
 
     def get_y(self):
+        """Méthode permettant de connaitre l'ordonné du coin supérieur gauche associé au bloc
+        bloc --> int"""
         return self.y
 
     def get_type(self):
+        """Méthode permettant de connaitre le type du bloc (or ou pierre)
+        bloc --> int"""
         return self.type
 
     def get_rect(self):
-        # self.rect renvoi un tableau (x1 , y1, largeur , hauteur )
+        """bloc --> rect/tuple"""
         t = self.rect
         return t
 
     def get_e_cinetique(self):
+        """Méthode permettant d'avoir l'energie cinétique associé au bloc
+        bloc --> int"""
         return self.e_cinetique
 
     def modify_e_cinetique(self, new_ec):
+        """Méthode modifiant l'energie cinétique associé au bloc
+        bloc --> int"""
         self.e_cinetique = new_ec
 
 
@@ -241,9 +268,8 @@ def calcul_traj(x_position, y_position, vitesse, temps_ecoule, angle, gravite):
 
 def change_scale_img(scale, image):
     """Permet de transformer la taille d'une image en applicant un multiplicateur
-    Renvoie l'image avec la nouvelle taille.
-    Prend un int et une image en paramêtre
-    scale, image --> int, image"""
+    Renvoie l'image avec la nouvelle taille en prenant un nombre entier et une image en paramêtre
+    scale, img --> int, img"""
     width = image.get_width
     height = image.get_height()
     image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
@@ -251,8 +277,8 @@ def change_scale_img(scale, image):
 
 
 def generate_piece(n, area, image):
-    """int -> tab[ pieces ]
-    nombre de piece à placer sur l'ecran dans une zone delimité (x1, x2, y1, y2) """
+    """Fonction générant n piéces aléatoirement dans une zone (area) donnée
+    int -> tab[ pieces]"""
     t = []
     for i in range(n):
         t.append((randint(area[0], area[1]), randint(area[2], area[3])))
@@ -262,10 +288,8 @@ def generate_piece(n, area, image):
 
 
 def draw_pieces(screen, t, projectile, n_score, applause_sound):
-    # cette fonction ne peut pas etre integrée dans la cl
-    # asse pieces en raison de la boucle
-    """tab[ pieces ] -> tab[ pieces ]
-    blit les pieces sur l'écran, vérifie si le joueur ne ramasse pas une pièce """
+    """Affiche les pièces sur l'écran et vérifie si le joueur ne ramasse pas une pièce
+    tab[ pieces ] -> tab[ pieces ]"""
     t_new = []
     for i in range(len(t)):
         screen.blit(t[i].get_img(), t[i].get_topleft())  # blit ( image , (x ,y ))
@@ -285,6 +309,8 @@ def draw_pieces(screen, t, projectile, n_score, applause_sound):
 
 # ----------------------- FONCTIONS DE LA MATRICE DE LA ZONE CASSABLE ----------------------- #
 def print_mat(M):
+    """Cette fonction n'est utilisé que pour des test lié au mode de conception de la matrice representant la zone cassable
+    M[int][int] --> None"""
     for i in range(8):
         for j in range(6):
             print(M[i][j], end=" ")
@@ -295,7 +321,9 @@ def create_mat_initial(nb_bloc, chance_or):
     """Créer la matrice représentant la zone cassable.
     0: Pas de bloc à cet emplacement
     1: Un bloc à cet emplacement
-    2: Une brique d'or à cet emplaement"""
+    2: Une brique d'or à cet emplacement
+    La création de la matrice est aléatoire, et tient compte du nombre de bloc ainsi qu'un pourcentage de chance d'avoir des blocs d'or dans la matrice
+    int, int --> M[int][int]"""
 
     M = [[0, 0, 0, 0, 0, 0, 0, 0],
          [0, 0, 0, 0, 0, 0, 0, 0],
@@ -324,7 +352,8 @@ def create_mat_initial(nb_bloc, chance_or):
 
 
 def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueur, nb_joueur, diff, punch_sound, old_score):  # (x1 , x2 , y1 , y2)
-    """ M -> M : renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyée sera différente."""
+    """ Renvoie la nouvelle matrice, si le poisson à casser des blocs, la matrice renvoyée sera différente.
+    M[[bloc]] -> M[[bloc]] """
     for i in range(7):
         for j in range(8):
             if M_bloc[i][j] != None:
@@ -370,6 +399,11 @@ def draw_mat(screen, M_bloc, projectile, image_bloc_casse, score, n_tir, a_joueu
 
 
 def create_mat_bloc(img_bloc, img_bloc_or, M):
+    """Cree une matrice de bloc à partir d'une matrice avec les indices correspondant :
+    0 : pas de bloc
+    1 : brique (bloc de pierre)
+    2 : bloc d'or
+    img, img, M[[int]] --> M[[bloc]] """
 
     M_bloc = [[None, None, None, None, None, None, None, None],
               [None, None, None, None, None, None, None, None],
@@ -391,16 +425,9 @@ def create_mat_bloc(img_bloc, img_bloc_or, M):
                 M[i][j] = None
     return M_bloc
 
-
-def test():
-    b = bloc(10, 20, "image", 2)
-    print(b.get_x())
-
-# test()
-# pos = pygame.mouse.get_pos()
-# .collidepoint(pos)
-
 def matrice_nb_bloc(mat):
+    """Permet d'avoir le nombre de bloc contenu dans une matrice de bloc
+    M[[bloc]] --> int"""
     nb_bloc = 0
     for i in range(7):
         for j in range(8):
@@ -409,7 +436,8 @@ def matrice_nb_bloc(mat):
     return nb_bloc
 
 def print_score(screen, nb_joueur, score, police):
-    " affiche les scorse de tout les joueurs"
+    """ Affiche les scores de tout les joueurs
+    screen, int, int, police --> None"""
     if (nb_joueur == 1):  # si il n'y a que un joueur n'affiche pas score joueur 1 : mais juste le score
         screen.blit(police.render(str(score[0]), 1, (0, 0, 0)), (260, 20))
     else:
@@ -429,6 +457,7 @@ def print_score(screen, nb_joueur, score, police):
         screen.blit(police.render(str(score[4]), 1, (0, 0, 0)), (835, 20))
 
 def print_gameover(screen, nb_joueur, score):
+    """Fonction de l'affichage de l'écran de fin de partie"""
     go_img = pygame.image.load("images/game_over.png").convert_alpha()
     go = pygame.transform.scale(go_img, (1000, 700))
     screen.blit(go, (0, 0))

@@ -11,7 +11,9 @@ para_jeu = [(7, float('inf'), 20, 30), (5, 20, 15, 35), (3, 10, 10, 50)]  # (nb_
 
 
 def start_the_game():
+    """Fonction du jeu entier, elle charge toutes les images et comprends la boucle du jeu"""
     global para_jeu
+
     # MON ECRAN
     screen = pygame.display.set_mode((1000, 700))  # largeur hauteur
 
@@ -19,7 +21,6 @@ def start_the_game():
     mer_img = pygame.image.load("images/mer.png").convert_alpha()
     sable_img = pygame.image.load("images/sable.png").convert_alpha()
     depart_gd = pygame.image.load("images/lance_pierre.png").convert_alpha()
-
 
     sardine_img = pygame.image.load("images/saumon.png").convert_alpha()
     globe_img = pygame.image.load("images/globe.png").convert_alpha()
@@ -107,6 +108,7 @@ def start_the_game():
     police_joueur = pygame.font.SysFont("bold", 40)
     image_joueur = police_joueur.render("Au tour du joueur ", 1, (0, 0, 0))
 
+    # SOUNDS
     punch_sound = pygame.mixer.Sound('sounds/PUNCH.wav')
     punch_sound.set_volume(0.1)
     applause_sound = pygame.mixer.Sound('sounds/applause10.wav')
@@ -233,9 +235,10 @@ def start_the_game():
 
 
 # ----------------------- RULES ----------------------- #
-def regle_jeu():  # fct pour la partie regle dans le menu
+def regle_jeu():
+    """Fonction de la partie regle appelée depuis le menu"""
     screen = pygame.display.set_mode((1000, 700))
-    fond_regle = pygame.image.load("images/mer.png").convert_alpha()
+    fond_regle = pygame.image.load("images/mer_regle.png").convert_alpha()
     globe = pygame.image.load("images/globe.png").convert_alpha()
     piece = pygame.image.load("images/piece.png").convert_alpha()
     retour = pygame.image.load("images/retour.png").convert_alpha()

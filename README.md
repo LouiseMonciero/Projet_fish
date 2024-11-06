@@ -2,10 +2,10 @@
 Bienvenue sur **Angry Fish**. Un jeu développé par des étudiants de premières année d'informatique.
 
 ## 📖Table des matières
-- [[#🐟Introduction]]
-- [[#🚀Installation]]
-- [[#📁Structure du projet]]
-- [[#✍️Auteurs]]
+- [Introduction](#🐟Introduction)
+- [Installation](#🚀Installation)
+- [Structure du projet](#📁Structure-du-projet)
+- [Auteurs](#✍️Auteurs)
 
 ## 🐟Introduction
 Bienvenue sur **Angry Fish**. Un jeu de tir ou les joueurs s'affrontent à lancés de poissons pour remporter la victoire. 🐟
